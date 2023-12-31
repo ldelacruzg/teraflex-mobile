@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/welcome_messages/domain/entities/welcome_message.dart';
 import 'package:teraflex_mobile/features/welcome_messages/domain/mappers/welcome_message_mapper.dart';
 import 'package:teraflex_mobile/shared/data/local_welcome_messages.dart';
@@ -66,7 +67,9 @@ class _WelcomeMessageViewState extends State<WelcomeMessageView> {
             children: [
               Expanded(
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push('/login');
+                  },
                   child: const Text('INICIAR SESIÓN'),
                 ),
               ),
