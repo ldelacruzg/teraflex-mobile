@@ -6,4 +6,5 @@ abstract class LoginLocalStorageDatasource {
   Future<LoginToken?> getToken();
   Future<void> deleteToken();
   Future<void> setUser(User user);
+  Future<bool> hasToken();
 }

@@ -27,4 +27,9 @@ class LoginLocalStorageRepositoryImpl extends LoginLocalStorageRepository {
   Future<void> setUser(User user) {
     return datasource.setUser(user);
   }
+
+  @override
+  Future<bool> hasToken() {
+    return datasource.hasToken();
+  }
 }

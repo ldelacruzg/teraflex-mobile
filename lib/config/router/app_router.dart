@@ -9,9 +9,6 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) {
-        // validar que haya un usuario logueado
-        const isUserLoggedIn = false;
-        if (isUserLoggedIn) return const HomeScreen();
         return const WelcomeMessagesScreen();
       },
     ),

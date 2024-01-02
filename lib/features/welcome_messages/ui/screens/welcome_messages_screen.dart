@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
 import 'package:teraflex_mobile/features/welcome_messages/domain/entities/welcome_message.dart';
 import 'package:teraflex_mobile/features/welcome_messages/domain/mappers/welcome_message_mapper.dart';
 import 'package:teraflex_mobile/shared/data/local_welcome_messages.dart';
@@ -8,8 +10,20 @@ class WelcomeMessagesScreen extends StatelessWidget {
   static const name = 'welcome_messages_screen';
   const WelcomeMessagesScreen({super.key});
 
+  Future<bool> isAuthenticated() async {
+    final repository = LoginLocalStorageRepositoryImpl(
+        datasource: IsarDBLoginLocalStorageDatasource());
+    return await repository.hasToken();
+  }
+
   @override
   Widget build(BuildContext context) {
+    isAuthenticated().then((value) {
+      if (value) {
+        context.go('/home');
+      }
+    });
+
     return const Scaffold(
       body: WelcomeMessageView(),
     );
