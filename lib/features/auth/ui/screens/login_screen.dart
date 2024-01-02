@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/auth/domain/entities/login_token.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/datasources/tfx_login_datasource.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_repository_impl.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -60,6 +62,11 @@ class _LoginFormState extends State<LoginForm> {
   final _dniController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _loginRepository =
+      LoginRepositotyImpl(datasource: TfxLoginDatasource());
+  final _localStorageRepository = LoginLocalStorageRepositoryImpl(
+    datasource: IsarDBLoginLocalStorageDatasource(),
+  );
   bool _showPassword = true;
   bool _isLoading = false;
 
@@ -80,19 +87,21 @@ class _LoginFormState extends State<LoginForm> {
         .whenComplete(() => _setLoading(false));
   }
 
-  void _handleLoginSuccess(LoginToken token) {
+  void _handleLoginSuccess(LoginToken token) async {
     if (token.role != 'PATIENT') {
       _showMessageError('Solo los pacientes pueden ingresar');
       return;
     }
 
+    // guardar el token en el storage
+    await _localStorageRepository.setToken(token);
+
+    // realizar petición para obtener los datos del usuario
     // guardar los datos del usuario en el storage
-    // decodificar el token
-    // obtener el id del paciente de los datos codificados
-    // realizar petición para obtener los datos del paciente
-    // guardar los datos del paciente en el storage
-    // enviar al usuario a la pantalla de inicio
-    context.push('/home');
+    final user = await _loginRepository.getProfile();
+    await _localStorageRepository
+        .setUser(user)
+        .then((value) => context.push('/home'));
   }
 
   void _onChangePasswordVisibility() {
@@ -108,14 +117,20 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _showMessageError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        action: SnackBarAction(
-          label: 'Ok',
-          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-        ),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -198,7 +213,7 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               Expanded(
                 child: FilledButton(
-                  onPressed: () => _isLoading ? null : _onSubmitLoginForm(),
+                  onPressed: _isLoading ? null : _onSubmitLoginForm,
                   child: Text(_isLoading ? 'CARGANDO...' : 'INGRESAR'),
                 ),
               ),

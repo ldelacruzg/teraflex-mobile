@@ -1,4 +1,10 @@
+import 'package:isar/isar.dart';
+
+part 'login_token.g.dart';
+
+@collection
 class LoginToken {
+  Id? isarId;
   final String token;
   final String role;
   final bool firstTime;
