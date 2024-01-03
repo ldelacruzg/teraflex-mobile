@@ -101,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
     final user = await _loginRepository.getProfile();
     await _localStorageRepository
         .setUser(user)
-        .then((value) => context.push('/home'));
+        .then((value) => context.go('/home'));
   }
 
   void _onChangePasswordVisibility() {

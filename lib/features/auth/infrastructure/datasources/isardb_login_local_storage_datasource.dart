@@ -57,4 +57,13 @@ class IsarDBLoginLocalStorageDatasource extends LoginLocalStorageDatasource {
     final isar = await _db;
     return await isar.loginTokens.get(1) != null;
   }
+
+  @override
+  Future<void> logout() async {
+    final isar = await _db;
+    await Future.wait([
+      isar.writeTxn(() => isar.loginTokens.clear()),
+      isar.writeTxn(() => isar.users.clear()),
+    ]);
+  }
 }

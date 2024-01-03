@@ -32,4 +32,9 @@ class LoginLocalStorageRepositoryImpl extends LoginLocalStorageRepository {
   Future<bool> hasToken() {
     return datasource.hasToken();
   }
+
+  @override
+  Future<void> logout() {
+    return datasource.logout();
+  }
 }

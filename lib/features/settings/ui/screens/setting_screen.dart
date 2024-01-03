@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
+
+final _loginLocalRepository = LoginLocalStorageRepositoryImpl(
+  datasource: IsarDBLoginLocalStorageDatasource(),
+);
 
 class SettingScreen extends StatelessWidget {
   static String name = 'setting_screen';
@@ -51,10 +57,45 @@ class SettingScreen extends StatelessWidget {
                 color: Color.fromRGBO(218, 31, 31, 1),
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              // modal to confirm logout
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const LogoutDialog(),
+              );
+            },
           )
         ],
       ),
+    );
+  }
+}
+
+class LogoutDialog extends StatelessWidget {
+  const LogoutDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Cerrar Sesión'),
+      content: const Text('¿Estás seguro de cerrar sesión?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            context.pop();
+          },
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () {
+            _loginLocalRepository.logout().then((value) => context.go('/'));
+          },
+          child: const Text('Si'),
+        ),
+      ],
     );
   }
 }
