@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TreatmentTasksScreen extends StatelessWidget {
   static const String name = 'treatment_tasks_screen';
@@ -79,7 +80,7 @@ class ListTaskItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => context.push('/home/treatments/1/tasks/1'),
                     child: const Text('Ver tarea'),
                   ),
                   const SizedBox(width: 10),
@@ -132,10 +133,6 @@ class CustomTasksAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.tune_rounded),
           onPressed: () => _onShowFilter(context),
-        ),
-        IconButton(
-          icon: const Icon(Icons.search_rounded),
-          onPressed: () {},
         ),
       ],
     );
