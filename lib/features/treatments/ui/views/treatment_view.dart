@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TreatmentView extends StatefulWidget {
   const TreatmentView({super.key});
@@ -39,7 +40,9 @@ class _TreatmentViewState extends State<TreatmentView> {
           leading:
               const CircleAvatar(child: Icon(Icons.fitness_center_rounded)),
           trailing: const Icon(Icons.arrow_forward_rounded),
-          onTap: () {},
+          onTap: () {
+            context.push('/home/treatments/1');
+          },
         ),
         ListTile(
           title: const Text(
@@ -52,7 +55,9 @@ class _TreatmentViewState extends State<TreatmentView> {
           leading:
               const CircleAvatar(child: Icon(Icons.fitness_center_rounded)),
           trailing: const Icon(Icons.arrow_forward_rounded),
-          onTap: () {},
+          onTap: () {
+            context.push('/home/treatments/2');
+          },
         ),
       ],
     );
