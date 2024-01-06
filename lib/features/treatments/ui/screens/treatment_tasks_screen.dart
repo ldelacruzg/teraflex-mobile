@@ -85,7 +85,8 @@ class ListTaskItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   FilledButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        context.push('/home/treatments/1/tasks/1/start'),
                     child: const Text('Iniciar tarea'),
                   )
                 ],

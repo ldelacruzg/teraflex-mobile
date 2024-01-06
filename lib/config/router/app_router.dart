@@ -4,6 +4,7 @@ import 'package:teraflex_mobile/features/home/ui/screens/home_screen.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/profile/profile_view.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/security/security_view.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/setting_screen.dart';
+import 'package:teraflex_mobile/features/tasks/ui/screens/start_task_screen.dart';
 import 'package:teraflex_mobile/features/tasks/ui/task_screen.dart';
 import 'package:teraflex_mobile/features/treatments/ui/screens/treatment_tasks_screen.dart';
 import 'package:teraflex_mobile/features/welcome_messages/ui/screens/welcome_messages_screen.dart';
@@ -42,6 +43,16 @@ final appRouter = GoRouter(
                 final taskId = state.pathParameters['taskId'] ?? 'no-id';
                 return TaskScreen(taskId: taskId);
               },
+              routes: [
+                GoRoute(
+                  path: 'start',
+                  name: StartTaskScreen.name,
+                  builder: (context, state) {
+                    final taskId = state.pathParameters['taskId'] ?? 'no-id';
+                    return StartTaskScreen(taskId: taskId);
+                  },
+                ),
+              ],
             ),
           ],
         ),
