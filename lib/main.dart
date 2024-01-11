@@ -5,6 +5,7 @@ import 'package:teraflex_mobile/config/router/app_router.dart';
 import 'package:teraflex_mobile/config/theme/app_theme.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/datasources/tfx_treatment_datasource.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/repositories/treatment_repository_impl.dart';
+import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_repository/treatment_repository_cubit.dart';
 
@@ -18,16 +19,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tfxRepository =
+        TreatmentRepositoryImpl(datasource: TfxTreatmentDatasource());
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => TreatmentRepositoryCubit()),
         BlocProvider(
-          create: (context) => SimpleTreatmentListCubit(
-            treatmentRepository: TreatmentRepositoryImpl(
-              datasource: TfxTreatmentDatasource(),
-            ),
-          ),
+          create: (context) =>
+              SimpleTreatmentListCubit(treatmentRepository: tfxRepository),
         ),
+        BlocProvider(
+          create: (context) =>
+              AssignedTasksCubit(treatmentRepository: tfxRepository),
+        )
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
