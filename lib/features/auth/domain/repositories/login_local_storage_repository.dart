@@ -8,4 +8,5 @@ abstract class LoginLocalStorageRepository {
   Future<void> setUser(User user);
   Future<bool> hasToken();
   Future<void> logout();
+  Future<User?> getUser();
 }

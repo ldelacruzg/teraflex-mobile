@@ -32,6 +32,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/welcome_messages/
+    - assets/images/home/
     - .env
   fonts:
     - family: Montserrat

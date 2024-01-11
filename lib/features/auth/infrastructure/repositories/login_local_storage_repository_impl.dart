@@ -37,4 +37,9 @@ class LoginLocalStorageRepositoryImpl extends LoginLocalStorageRepository {
   Future<void> logout() {
     return datasource.logout();
   }
+
+  @override
+  Future<User?> getUser() {
+    return datasource.getUser();
+  }
 }
