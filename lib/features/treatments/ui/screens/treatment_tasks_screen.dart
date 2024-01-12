@@ -300,7 +300,7 @@ class CustomTreatmentBottomSheet extends StatelessWidget {
           return Container(
             width: size.width,
             padding:
-                const EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 20),
+                const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 20),
             decoration: BoxDecoration(
               color: Colors.blueAccent[50],
             ),
@@ -311,6 +311,8 @@ class CustomTreatmentBottomSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Center(child: Icon(Icons.keyboard_arrow_up, size: 30)),
+                  const SizedBox(height: 15),
                   Row(
                     children: [
                       InfoSpan(
