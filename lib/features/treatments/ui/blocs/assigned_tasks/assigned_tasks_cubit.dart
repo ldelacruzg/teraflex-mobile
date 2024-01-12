@@ -14,13 +14,13 @@ class AssignedTasksCubit extends Cubit<AssignedTasksState> {
   }) : super(const AssignedTasksState());
 
   Future<void> getTasks({
-    required String treatmentId,
+    required int treatmentId,
     bool? taskDone,
   }) async {
     emit(state.copyWith(status: StatusUtil.loading));
     try {
       final tasks = await treatmentRepository.getAssignedTasks(
-        treatmentId: int.parse(treatmentId),
+        treatmentId: treatmentId,
         taskDone: taskDone,
       );
 

@@ -10,7 +10,7 @@ import 'package:teraflex_mobile/features/treatments/ui/screens/treatment_tasks_s
 import 'package:teraflex_mobile/features/welcome_messages/ui/screens/welcome_messages_screen.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
