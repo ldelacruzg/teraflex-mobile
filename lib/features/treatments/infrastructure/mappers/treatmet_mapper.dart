@@ -1,7 +1,9 @@
 import 'package:teraflex_mobile/features/treatments/domain/entities/simple_treatment.dart';
+import 'package:teraflex_mobile/features/treatments/domain/entities/treatment.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/models/tfx/tfx_assined_tasks_model.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/models/tfx/tfx_treatment_list_model.dart';
+import 'package:teraflex_mobile/features/treatments/infrastructure/models/tfx/tfx_treatment_model.dart';
 
 class TreatmentMapper {
   static List<SimpleTreatment> fromTfxSimpleTreatment(
@@ -36,5 +38,16 @@ class TreatmentMapper {
         ),
       );
     }).toList();
+  }
+
+  static Treatment fromTfxTreatment(TfxTreatmentModel treatment) {
+    return Treatment(
+      id: treatment.data.id,
+      title: treatment.data.title,
+      description: treatment.data.description,
+      startDate: treatment.data.startDate,
+      endDate: treatment.data.endDate,
+      isActive: treatment.data.isActive,
+    );
   }
 }

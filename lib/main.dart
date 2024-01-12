@@ -7,6 +7,7 @@ import 'package:teraflex_mobile/features/treatments/infrastructure/datasources/t
 import 'package:teraflex_mobile/features/treatments/infrastructure/repositories/treatment_repository_impl.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
+import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_repository/treatment_repository_cubit.dart';
 
 void main() async {
@@ -32,7 +33,11 @@ class MainApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               AssignedTasksCubit(treatmentRepository: tfxRepository),
-        )
+        ),
+        BlocProvider(
+          create: (context) =>
+              TreatmentDetailCubit(treatmentRepository: tfxRepository),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

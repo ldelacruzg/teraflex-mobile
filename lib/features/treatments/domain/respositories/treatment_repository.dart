@@ -1,4 +1,5 @@
 import 'package:teraflex_mobile/features/treatments/domain/entities/simple_treatment.dart';
+import 'package:teraflex_mobile/features/treatments/domain/entities/treatment.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 
 abstract class TreatmentRepository {
@@ -10,5 +11,9 @@ abstract class TreatmentRepository {
   Future<List<TreatmentTask>> getAssignedTasks({
     required int treatmentId,
     bool? taskDone,
+  });
+
+  Future<Treatment> getTreatment({
+    required int treatmentId,
   });
 }

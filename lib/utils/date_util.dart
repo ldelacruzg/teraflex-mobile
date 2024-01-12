@@ -10,4 +10,8 @@ class DateUtil {
 
     return thisWeek;
   }
+
+  static String getShortDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
 }

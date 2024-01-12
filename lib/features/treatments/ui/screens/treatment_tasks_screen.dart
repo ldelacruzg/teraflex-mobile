@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
+import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
+import 'package:teraflex_mobile/utils/date_util.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 import 'package:teraflex_mobile/utils/time_util.dart';
 
@@ -189,6 +191,7 @@ class CustomTasksAppBar extends StatelessWidget implements PreferredSizeWidget {
   void _onShowInfo(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return const CustomTreatmentBottomSheet();
       },
@@ -285,54 +288,69 @@ class CustomTreatmentBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      height: size.height * 0.5,
-      width: size.width,
-      decoration: BoxDecoration(
-        color: Colors.blueAccent[50],
-      ),
-      child: const Padding(
-        padding: EdgeInsets.only(top: 30, left: 16, right: 16, bottom: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                InfoSpan(
-                  icon: Icons.calendar_month_outlined,
-                  title: 'Inicio',
-                  value: '10/10/2021',
-                ),
-                InfoSpan(
-                  icon: Icons.calendar_month_rounded,
-                  title: 'Terminó',
-                  value: 'Habilitado',
-                ),
-              ],
+    final state = context.watch<TreatmentDetailCubit>().state;
+
+    if (state.status == StatusUtil.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return DraggableScrollableSheet(
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            width: size.width,
+            padding:
+                const EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 20),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent[50],
             ),
-            SizedBox(height: 20),
-            Text(
-              'Tratamiento',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      InfoSpan(
+                        icon: Icons.calendar_month_outlined,
+                        title: 'Inicio',
+                        value:
+                            DateUtil.getShortDate(state.treatment!.startDate),
+                      ),
+                      InfoSpan(
+                        icon: Icons.calendar_month_rounded,
+                        title: 'Terminó',
+                        value: !state.treatment!.isActive
+                            ? DateUtil.getShortDate(state.treatment!.endDate!)
+                            : 'Aún no',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Tratamiento',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    state.treatment!.title,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    state.treatment!.description,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Tratamiento para recuperar la movilidad de la mano',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Se le asignara multiples ejercicios dependiendo del tiempo de recuperación',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
 
@@ -370,7 +388,10 @@ class InfoSpan extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title),
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     Text(
                       value,
                       style: const TextStyle(fontWeight: FontWeight.w500),

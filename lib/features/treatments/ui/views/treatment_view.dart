@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/simple_treatment.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
+import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
 
 class TreatmentView extends StatelessWidget {
   const TreatmentView({super.key});
@@ -75,6 +76,9 @@ class ListTreatmentItem extends StatelessWidget {
       leading: const CircleAvatar(child: Icon(Icons.fitness_center_rounded)),
       trailing: const Icon(Icons.arrow_forward_rounded),
       onTap: () {
+        context
+            .read<TreatmentDetailCubit>()
+            .getTreatment(treatmentId: treatment.id);
         context.push('/home/treatments/${treatment.id}');
       },
     );
