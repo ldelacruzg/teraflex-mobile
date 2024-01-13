@@ -188,6 +188,7 @@ class CustomTasksAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _onShowFilter(BuildContext context) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return const CustomTaskFilters();

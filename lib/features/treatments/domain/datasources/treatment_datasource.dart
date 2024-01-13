@@ -10,7 +10,9 @@ abstract class TreatmentDatasource {
 
   Future<List<TreatmentTask>> getAssignedTasks({
     required int treatmentId,
-    bool? taskDone,
+    required bool completedTasks,
+    required bool pendingTasks,
+    required bool expiredTasks,
   });
 
   Future<Treatment> getTreatment({

@@ -15,13 +15,14 @@ class AssignedTasksCubit extends Cubit<AssignedTasksState> {
 
   Future<void> getTasks({
     required int treatmentId,
-    bool? taskDone,
   }) async {
     emit(state.copyWith(status: StatusUtil.loading));
     try {
       final tasks = await treatmentRepository.getAssignedTasks(
         treatmentId: treatmentId,
-        taskDone: taskDone,
+        completedTasks: state.completedTasks,
+        pendingTasks: state.pendingTasks,
+        expiredTasks: state.expiredTasks,
       );
 
       if (tasks.isEmpty) {
@@ -43,5 +44,17 @@ class AssignedTasksCubit extends Cubit<AssignedTasksState> {
         statusMessage: e.toString(),
       ));
     }
+  }
+
+  void changePendingTasks() {
+    emit(state.copyWith(pendingTasks: !state.pendingTasks));
+  }
+
+  void changeCompletedTasks() {
+    emit(state.copyWith(completedTasks: !state.completedTasks));
+  }
+
+  void changeExpiredTasks() {
+    emit(state.copyWith(expiredTasks: !state.expiredTasks));
   }
 }

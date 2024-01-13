@@ -37,15 +37,19 @@ class TfxTreatmentDatasource extends TreatmentDatasource {
   }
 
   @override
-  Future<List<TreatmentTask>> getAssignedTasks(
-      {required int treatmentId, bool? taskDone}) async {
+  Future<List<TreatmentTask>> getAssignedTasks({
+    required int treatmentId,
+    required bool completedTasks,
+    required bool pendingTasks,
+    required bool expiredTasks,
+  }) async {
     late Response<dynamic> response;
     final dio = await DioTeraflexAPI.dio;
-    final Map<String, dynamic> queryParameters = {};
-
-    if (taskDone != null) {
-      queryParameters['task-done'] = taskDone;
-    }
+    final Map<String, dynamic> queryParameters = {
+      'completedTasks': completedTasks,
+      'pendingTasks': pendingTasks,
+      'expiredTasks': expiredTasks,
+    };
 
     try {
       response = await dio.get(

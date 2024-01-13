@@ -18,9 +18,16 @@ class TreatmentRepositoryImpl extends TreatmentRepository {
 
   @override
   Future<List<TreatmentTask>> getAssignedTasks(
-      {required int treatmentId, bool? taskDone}) {
+      {required int treatmentId,
+      required bool completedTasks,
+      required bool pendingTasks,
+      required bool expiredTasks}) {
     return datasource.getAssignedTasks(
-        treatmentId: treatmentId, taskDone: taskDone);
+      treatmentId: treatmentId,
+      completedTasks: completedTasks,
+      pendingTasks: pendingTasks,
+      expiredTasks: expiredTasks,
+    );
   }
 
   @override
