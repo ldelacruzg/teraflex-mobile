@@ -167,12 +167,27 @@ class VideoPlaylistItem extends StatelessWidget {
     return playing ? Icons.pause : Icons.play_arrow;
   }
 
+  void showMessage(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+            'El video no está disponible, contacte con su terapeuta'),
+        action: SnackBarAction(
+          label: 'Ok',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorSchema = Theme.of(context).colorScheme;
 
     return GestureDetector(
-      onTap: video.status ? onTap : null,
+      onTap: video.status ? onTap : () => showMessage(context),
       child: Container(
         color: playing ? colorSchema.secondary : Colors.transparent,
         child: Padding(
