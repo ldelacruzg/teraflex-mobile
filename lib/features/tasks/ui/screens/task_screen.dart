@@ -84,6 +84,20 @@ class _TaskView extends StatelessWidget {
     return state.videos[state.currentVideoIndex];
   }
 
+  Widget getVideoPlayer(BuildContext context) {
+    final video = getVideo(context);
+    if (video == null) {
+      return const SizedBox.shrink();
+    }
+
+    if (video.type == MultimediaType.mp4) {
+      return CustomVideoPlayer(url: video.url);
+    }
+
+    return Text('Video de Youtube ${video.url}');
+    //return const CustomYouTubeVideoPlayer();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<MultimediaListCubit>().state;
@@ -95,6 +109,7 @@ class _TaskView extends StatelessWidget {
       body: Column(
         children: [
           //const CustomVideoPlayer(),
+          getVideoPlayer(context),
           VideoDescription(video: getVideo(context)),
           VideoPlaylist(
             videos: state.videos,
@@ -213,7 +228,7 @@ class VideoPlaylistItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Creado por: ${video.uploadedBy}',
+                      'Subido por: ${video.uploadedBy}',
                       style: TextStyle(
                         color: playing ? Colors.white : Colors.black,
                       ),
@@ -254,21 +269,32 @@ class VideoDescription extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            video!.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  video!.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  video!.description,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(video!.description)
         ],
       ),
     );
@@ -277,10 +303,11 @@ class VideoDescription extends StatelessWidget {
 
 // Players
 class CustomVideoPlayer extends StatefulWidget {
-  final String? url;
+  final String url;
+
   const CustomVideoPlayer({
     super.key,
-    this.url,
+    required this.url,
   });
 
   @override
@@ -294,15 +321,14 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
   @override
   void initState() {
     _vpController = VideoPlayerController.networkUrl(
-      Uri.parse(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-      ),
+      Uri.parse(widget.url),
     );
 
     _vpController.initialize().then((value) => setState(() {}));
 
     _chewieController = ChewieController(
       videoPlayerController: _vpController,
+      aspectRatio: 16 / 9,
       autoPlay: true,
       looping: true,
     );
