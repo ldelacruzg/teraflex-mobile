@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teraflex_mobile/config/router/app_router.dart';
 import 'package:teraflex_mobile/config/theme/app_theme.dart';
+import 'package:teraflex_mobile/features/tasks/infrastructure/datasources/tfx_task_datasource.dart';
+import 'package:teraflex_mobile/features/tasks/infrastructure/repositories/task_repository_impl.dart';
+import 'package:teraflex_mobile/features/tasks/ui/blocs/multimedia_list/multimedia_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/datasources/tfx_treatment_datasource.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/repositories/treatment_repository_impl.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
@@ -20,23 +23,30 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tfxRepository =
+    final tfxTreatmentRepository =
         TreatmentRepositoryImpl(datasource: TfxTreatmentDatasource());
+
+    final tfxTaskRepository =
+        TaskRepositoryImpl(datasource: TfxTaskDatasource());
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => TreatmentRepositoryCubit()),
         BlocProvider(
-          create: (context) =>
-              SimpleTreatmentListCubit(treatmentRepository: tfxRepository),
+          create: (context) => SimpleTreatmentListCubit(
+              treatmentRepository: tfxTreatmentRepository),
         ),
         BlocProvider(
           create: (context) =>
-              AssignedTasksCubit(treatmentRepository: tfxRepository),
+              AssignedTasksCubit(treatmentRepository: tfxTreatmentRepository),
         ),
         BlocProvider(
           create: (context) =>
-              TreatmentDetailCubit(treatmentRepository: tfxRepository),
+              TreatmentDetailCubit(treatmentRepository: tfxTreatmentRepository),
+        ),
+        BlocProvider(
+          create: (context) =>
+              MultimediaListCubit(taskRepository: tfxTaskRepository),
         ),
       ],
       child: MaterialApp.router(

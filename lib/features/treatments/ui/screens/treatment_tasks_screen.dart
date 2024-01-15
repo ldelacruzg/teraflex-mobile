@@ -151,7 +151,8 @@ class ListTaskItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () => context.push('/home/treatments/1/tasks/1'),
+                    onPressed: () => context
+                        .push('/home/treatments/1/tasks/${task.task.id}'),
                     child: const Text('Ver tarea'),
                   ),
                   const SizedBox(width: 10),
