@@ -5,4 +5,5 @@ enum StatusUtil {
   loading,
   empty,
   none,
+  disabled,
 }

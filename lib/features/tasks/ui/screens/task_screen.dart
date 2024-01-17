@@ -67,10 +67,119 @@ class _TaskScreenState extends State<TaskScreen> {
       );
     }
 
+    if (state.status == StatusUtil.disabled) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Multimedia')),
+        body: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Text(
+                'Los videos no están disponibles. Contacte con su terapeuta para que los habilite.',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            VideoPlaylist(
+              videos: state.videos,
+              currentVideoIndex: state.currentVideoIndex,
+            ),
+          ],
+        ),
+      );
+    }
+
     return const CustomVideoPlayer();
   }
 }
 
+// Player
+class CustomVideoPlayer extends StatefulWidget {
+  const CustomVideoPlayer({Key? key}) : super(key: key);
+
+  @override
+  State<CustomVideoPlayer> createState() => _CustomVideoPlayerState();
+}
+
+class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
+  late final PodPlayerController controller;
+
+  @override
+  void initState() {
+    final state = context.read<MultimediaListCubit>().state;
+    final video = state.videos[state.currentVideoIndex];
+
+    _initialiseVideoPlayer(
+      playVideoFrom: _getPlayVideoFrom(
+        videoUrl: video.url,
+        type: video.type,
+      ),
+    );
+    super.initState();
+  }
+
+  PlayVideoFrom _getPlayVideoFrom(
+      {required String videoUrl, required MultimediaType type}) {
+    return type == MultimediaType.mp4
+        ? PlayVideoFrom.network(videoUrl)
+        : PlayVideoFrom.youtube(videoUrl);
+  }
+
+  void _initialiseVideoPlayer({required PlayVideoFrom playVideoFrom}) {
+    controller = PodPlayerController(
+      playVideoFrom: playVideoFrom,
+    )..initialise();
+  }
+
+  void _changeVideo({required PlayVideoFrom playVideoFrom}) {
+    controller.changeVideo(
+      playVideoFrom: playVideoFrom,
+    );
+  }
+
+  void _onChange({required int index}) async {
+    context.read<MultimediaListCubit>().onChangeCurrentVideo(index: index);
+
+    final state = context.read<MultimediaListCubit>().state;
+    final video = state.videos[index];
+    _changeVideo(
+      playVideoFrom: _getPlayVideoFrom(
+        videoUrl: video.url,
+        type: video.type,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<MultimediaListCubit>().state;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Multimedia')),
+      body: Column(
+        children: [
+          PodVideoPlayer(controller: controller),
+          VideoDescription(video: state.videos[state.currentVideoIndex]),
+          VideoPlaylist(
+            videos: state.videos,
+            currentVideoIndex: state.currentVideoIndex,
+            onChange: _onChange,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Playlist
 class VideoPlaylist extends StatelessWidget {
   final List<Multimedia> videos;
   final int currentVideoIndex;
@@ -194,33 +303,20 @@ class VideoPlaylistItem extends StatelessWidget {
 }
 
 class VideoDescription extends StatelessWidget {
-  final Multimedia? video;
+  final Multimedia video;
 
   const VideoDescription({
     super.key,
-    this.video,
+    required this.video,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (video == null) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        child: Text(
-          'Los videos no están disponibles. Contacte con su terapeuta para que los habilite.',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      );
-    }
-
     return ExpansionTile(
       tilePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       title: Text(
-        video!.title,
+        video.title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(
@@ -229,102 +325,18 @@ class VideoDescription extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        video!.description,
+        video.description,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       children: [
         Text(
-          video!.description,
+          video.description,
           style: const TextStyle(
             fontWeight: FontWeight.w500,
           ),
         ),
       ],
-    );
-  }
-}
-
-// Player
-class CustomVideoPlayer extends StatefulWidget {
-  const CustomVideoPlayer({Key? key}) : super(key: key);
-
-  @override
-  State<CustomVideoPlayer> createState() => _CustomVideoPlayerState();
-}
-
-class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
-  late final PodPlayerController controller;
-
-  @override
-  void initState() {
-    final state = context.read<MultimediaListCubit>().state;
-    final video = state.videos[state.currentVideoIndex];
-
-    _initialiseVideoPlayer(
-      playVideoFrom: _getPlayVideoFrom(
-        videoUrl: video.url,
-        type: video.type,
-      ),
-    );
-    super.initState();
-  }
-
-  PlayVideoFrom _getPlayVideoFrom(
-      {required String videoUrl, required MultimediaType type}) {
-    return type == MultimediaType.mp4
-        ? PlayVideoFrom.network(videoUrl)
-        : PlayVideoFrom.youtube(videoUrl);
-  }
-
-  void _initialiseVideoPlayer({required PlayVideoFrom playVideoFrom}) {
-    controller = PodPlayerController(
-      playVideoFrom: playVideoFrom,
-    )..initialise();
-  }
-
-  void _changeVideo({required PlayVideoFrom playVideoFrom}) {
-    controller.changeVideo(
-      playVideoFrom: playVideoFrom,
-    );
-  }
-
-  void _onChange({required int index}) async {
-    context.read<MultimediaListCubit>().onChangeCurrentVideo(index: index);
-
-    final state = context.read<MultimediaListCubit>().state;
-    final video = state.videos[index];
-    _changeVideo(
-      playVideoFrom: _getPlayVideoFrom(
-        videoUrl: video.url,
-        type: video.type,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watch<MultimediaListCubit>().state;
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Multimedia')),
-      body: Column(
-        children: [
-          PodVideoPlayer(controller: controller),
-          VideoDescription(video: state.videos[state.currentVideoIndex]),
-          VideoPlaylist(
-            videos: state.videos,
-            currentVideoIndex: state.currentVideoIndex,
-            onChange: _onChange,
-          ),
-        ],
-      ),
     );
   }
 }

@@ -19,16 +19,14 @@ class MultimediaListCubit extends Cubit<MultimediaListState> {
 
     try {
       final videos = await taskRepository.getVideos(assignmentId: assignmentId);
-      int currentVideoIndex = 0;
-
-      if (videos.isNotEmpty) {
-        currentVideoIndex = videos.indexWhere((element) => element.status);
-      }
+      int currentVideoIndex = videos.indexWhere((element) => element.status);
+      bool disabled = currentVideoIndex == -1;
 
       emit(state.copyWith(
         videos: videos,
-        status: StatusUtil.success,
+        status: disabled ? StatusUtil.disabled : StatusUtil.success,
         currentVideoIndex: currentVideoIndex,
+        statusMessage: disabled ? 'No hay videos disponibles' : null,
       ));
     } catch (e) {
       emit(state.copyWith(
