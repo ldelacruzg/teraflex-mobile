@@ -216,35 +216,31 @@ class VideoDescription extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  video!.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  video!.description,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+    return ExpansionTile(
+      tilePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      title: Text(
+        video!.title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
       ),
+      subtitle: Text(
+        video!.description,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      children: [
+        Text(
+          video!.description,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -317,7 +313,7 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     final state = context.watch<MultimediaListCubit>().state;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Youtube player')),
+      appBar: AppBar(title: const Text('Multimedia')),
       body: Column(
         children: [
           PodVideoPlayer(controller: controller),
