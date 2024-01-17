@@ -1,11 +1,10 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pod_player/pod_player.dart';
 import 'package:teraflex_mobile/features/tasks/domain/entities/multimedia.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/multimedia_list/multimedia_list_cubit.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
-import 'package:video_player/video_player.dart';
 
 class TaskScreen extends StatefulWidget {
   static const String name = 'task_screen';
@@ -68,57 +67,7 @@ class _TaskScreenState extends State<TaskScreen> {
       );
     }
 
-    return const _TaskView();
-  }
-}
-
-class _TaskView extends StatelessWidget {
-  const _TaskView();
-
-  Multimedia? getVideo(BuildContext context) {
-    final state = context.watch<MultimediaListCubit>().state;
-    if (state.currentVideoIndex < 0) {
-      return null;
-    }
-
-    return state.videos[state.currentVideoIndex];
-  }
-
-  Widget getVideoPlayer(BuildContext context) {
-    final video = getVideo(context);
-    if (video == null) {
-      return const SizedBox.shrink();
-    }
-
-    if (video.type == MultimediaType.mp4) {
-      return CustomVideoPlayer(url: video.url);
-    }
-
-    return Text('Video de Youtube ${video.url}');
-    //return const CustomYouTubeVideoPlayer();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watch<MultimediaListCubit>().state;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Multimedia'),
-      ),
-      body: Column(
-        children: [
-          //const CustomVideoPlayer(),
-          getVideoPlayer(context),
-          VideoDescription(video: getVideo(context)),
-          VideoPlaylist(
-            videos: state.videos,
-            currentVideoIndex: state.currentVideoIndex,
-            onChange: context.read<MultimediaListCubit>().onChangeCurrentVideo,
-          ),
-        ],
-      ),
-    );
+    return const CustomVideoPlayer();
   }
 }
 
@@ -288,7 +237,6 @@ class VideoDescription extends StatelessWidget {
                 Text(
                   video!.description,
                   style: const TextStyle(
-                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 )
@@ -301,64 +249,86 @@ class VideoDescription extends StatelessWidget {
   }
 }
 
-// Players
+// Player
 class CustomVideoPlayer extends StatefulWidget {
-  final String url;
-
-  const CustomVideoPlayer({
-    super.key,
-    required this.url,
-  });
+  const CustomVideoPlayer({Key? key}) : super(key: key);
 
   @override
   State<CustomVideoPlayer> createState() => _CustomVideoPlayerState();
 }
 
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
-  late final VideoPlayerController _vpController;
-  late final ChewieController _chewieController;
+  late final PodPlayerController controller;
 
   @override
   void initState() {
-    _vpController = VideoPlayerController.networkUrl(
-      Uri.parse(widget.url),
+    final state = context.read<MultimediaListCubit>().state;
+    final video = state.videos[state.currentVideoIndex];
+
+    _initialiseVideoPlayer(
+      playVideoFrom: _getPlayVideoFrom(
+        videoUrl: video.url,
+        type: video.type,
+      ),
     );
-
-    _vpController.initialize().then((value) => setState(() {}));
-
-    _chewieController = ChewieController(
-      videoPlayerController: _vpController,
-      aspectRatio: 16 / 9,
-      autoPlay: true,
-      looping: true,
-    );
-
     super.initState();
+  }
+
+  PlayVideoFrom _getPlayVideoFrom(
+      {required String videoUrl, required MultimediaType type}) {
+    return type == MultimediaType.mp4
+        ? PlayVideoFrom.network(videoUrl)
+        : PlayVideoFrom.youtube(videoUrl);
+  }
+
+  void _initialiseVideoPlayer({required PlayVideoFrom playVideoFrom}) {
+    controller = PodPlayerController(
+      playVideoFrom: playVideoFrom,
+    )..initialise();
+  }
+
+  void _changeVideo({required PlayVideoFrom playVideoFrom}) {
+    controller.changeVideo(
+      playVideoFrom: playVideoFrom,
+    );
+  }
+
+  void _onChange({required int index}) async {
+    context.read<MultimediaListCubit>().onChangeCurrentVideo(index: index);
+
+    final state = context.read<MultimediaListCubit>().state;
+    final video = state.videos[index];
+    _changeVideo(
+      playVideoFrom: _getPlayVideoFrom(
+        videoUrl: video.url,
+        type: video.type,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _vpController.dispose();
-    _chewieController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      child: Chewie(
-        controller: _chewieController,
+    final state = context.watch<MultimediaListCubit>().state;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Youtube player')),
+      body: Column(
+        children: [
+          PodVideoPlayer(controller: controller),
+          VideoDescription(video: state.videos[state.currentVideoIndex]),
+          VideoPlaylist(
+            videos: state.videos,
+            currentVideoIndex: state.currentVideoIndex,
+            onChange: _onChange,
+          ),
+        ],
       ),
     );
-  }
-}
-
-class CustomYouTubeVideoPlayer extends StatelessWidget {
-  const CustomYouTubeVideoPlayer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
