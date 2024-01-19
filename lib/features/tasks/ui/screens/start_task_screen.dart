@@ -114,14 +114,16 @@ class StartTaskView extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: state.status == ExecutionStatus.finished,
-              child: const Text('La tarea ha finalizado'),
-            ),
-            Visibility(
               visible: state.status == ExecutionStatus.resting,
               child: Column(
                 children: [
-                  const Text('Tiempo de descanso'),
+                  const Text(
+                    'Tiempo de descanso',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   CustomTimer(
                     duration: state.restingDuration,
                     onFinished: context.read<TaskExecutionCubit>().nextTimer,
@@ -130,12 +132,14 @@ class StartTaskView extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Serie ${state.currentSeries}, Repetición ${state.currentRepetition}',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Visibility(
+              visible: state.status == ExecutionStatus.running,
+              child: Text(
+                'Serie ${state.currentSeries} - Repetición ${state.currentRepetition}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             const SizedBox(height: 20),

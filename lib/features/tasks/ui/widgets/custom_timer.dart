@@ -88,12 +88,15 @@ class _CustomTimerState extends State<CustomTimer> {
           children: [
             const Text(
               'Comenzamos en',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Text(
               "${_countdown.inSeconds}",
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 50,
                 fontWeight: FontWeight.bold,
               ),
             ),
