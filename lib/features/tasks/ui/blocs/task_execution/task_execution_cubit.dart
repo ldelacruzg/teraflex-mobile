@@ -9,10 +9,19 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
   TaskExecutionCubit() : super(const TaskExecutionState());
 
   void init(TaskConfig taskConfig) {
+    final List<Serie> executions = List.generate(taskConfig.series, (index) {
+      return Serie(
+        repetitions: List.generate(taskConfig.repetitions, (index) {
+          return Repetition();
+        }),
+      );
+    });
+
     emit(const TaskExecutionState().copyWith(
       taskConfig: taskConfig,
       repetitionDuration: TimeUtil.getDuration(taskConfig.timePerRepetition),
       restingDuration: TimeUtil.getDuration(taskConfig.breakTime),
+      executions: executions,
     ));
   }
 
@@ -41,8 +50,13 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
     int newRepetition = state.currentRepetition + 1;
 
     if (isTaskCompleted(series: newSerie, repetitions: newRepetition)) {
-      return emit(const TaskExecutionState().copyWith(
+      return emit(state.copyWith(
         status: ExecutionStatus.finished,
+        currentSeries: 0,
+        currentRepetition: 0,
+        executions: state.changeSerieAndRepetitionStatus(
+          status: TimerState.done,
+        ),
       ));
     }
 
@@ -54,6 +68,9 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
         ) {
       return emit(state.copyWith(
         status: ExecutionStatus.resting,
+        executions: state.changeStatusRepetition(
+          status: TimerState.done,
+        ),
       ));
     }
 
@@ -71,11 +88,13 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       return emit(state.copyWith(
         currentSeries: newSerie,
         currentRepetition: 1,
+        executions: state.changeStatusSerie(status: TimerState.done),
       ));
     }
 
     emit(state.copyWith(
       currentRepetition: newRepetition,
+      executions: state.changeStatusRepetition(status: TimerState.done),
     ));
   }
 }

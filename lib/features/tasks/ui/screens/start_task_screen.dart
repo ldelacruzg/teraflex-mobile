@@ -1,11 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/task_execution/task_execution_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
+import 'package:teraflex_mobile/features//tasks/ui/widgets/custom_timer.dart';
 
 class StartTaskScreen extends StatefulWidget {
   static const String name = 'start_task_screen';
@@ -149,11 +148,15 @@ class StartTaskView extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: taskConfig.series,
+                itemCount: state.executions.length,
                 itemBuilder: (context, index) {
+                  final serie = state.executions[index];
                   return TimerSerie(
-                    title: 'Serie ${index + 1}',
-                    repetions: taskConfig.repetitions,
+                    status: serie.status,
+                    parentSerie: index,
+                    repetitions: serie.repetitions,
+                    currentRepetition: state.currentRepetition,
+                    currentSerie: state.currentSeries,
                   );
                 },
               ),
@@ -166,7 +169,7 @@ class StartTaskView extends StatelessWidget {
           bottom: 20,
           right: 16,
           child: FilledButton(
-            onPressed: () {},
+            onPressed: state.status == ExecutionStatus.finished ? () {} : null,
             child: const Text('FINALIZAR'),
           ),
         ),
@@ -176,14 +179,46 @@ class StartTaskView extends StatelessWidget {
 }
 
 class TimerSerie extends StatelessWidget {
-  final String title;
-  final int repetions;
+  final TimerState status;
+  final List<Repetition> repetitions;
+  final int parentSerie;
+  final int currentRepetition;
+  final int currentSerie;
 
   const TimerSerie({
     super.key,
-    required this.title,
-    required this.repetions,
+    required this.status,
+    required this.repetitions,
+    required this.parentSerie,
+    required this.currentRepetition,
+    required this.currentSerie,
   });
+
+  String get strStatus {
+    switch (status) {
+      case TimerState.done:
+        return 'Completada';
+      case TimerState.current:
+        return 'En Curso';
+      case TimerState.pending:
+        return 'Pendiente';
+      default:
+        return 'Pendiente';
+    }
+  }
+
+  Color get colorStatus {
+    switch (status) {
+      case TimerState.done:
+        return Colors.greenAccent.shade100;
+      case TimerState.current:
+        return Colors.blueAccent.shade100;
+      case TimerState.pending:
+        return Colors.orangeAccent.shade100;
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,30 +226,48 @@ class TimerSerie extends StatelessWidget {
       leading: const CircleAvatar(
         child: Icon(Icons.replay_outlined),
       ),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+      title: Row(
+        children: [
+          Text(
+            'Serie ${parentSerie + 1}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: currentSerie == (parentSerie + 1)
+                  ? Colors.blueAccent.shade100
+                  : colorStatus,
+            ),
+            child: Text(
+              currentSerie == (parentSerie + 1) ? 'En Curso' : strStatus,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
       children: [
-        for (var i = 0; i < repetions; i++)
+        for (var i = 0; i < repetitions.length; i++)
           TimerRepeat(
-            title: 'Repeticion ${i + 1}',
-            state: TimerRepeatState.done,
+            title: 'Repetición ${i + 1}',
+            state: currentRepetition == (i + 1) &&
+                    currentSerie == (parentSerie + 1)
+                ? TimerState.current
+                : repetitions[i].status,
           ),
       ],
     );
   }
 }
 
-enum TimerRepeatState {
-  done,
-  current,
-  pending,
-}
-
 class TimerRepeat extends StatelessWidget {
   final String title;
-  final TimerRepeatState state;
+  final TimerState state;
 
   const TimerRepeat({
     super.key,
@@ -224,11 +277,11 @@ class TimerRepeat extends StatelessWidget {
 
   IconData getIcon() {
     switch (state) {
-      case TimerRepeatState.done:
+      case TimerState.done:
         return Icons.check_circle_outline;
-      case TimerRepeatState.current:
+      case TimerState.current:
         return Icons.refresh_outlined;
-      case TimerRepeatState.pending:
+      case TimerState.pending:
         return Icons.play_arrow_outlined;
       default:
         return Icons.play_arrow_outlined;
@@ -236,7 +289,7 @@ class TimerRepeat extends StatelessWidget {
   }
 
   Color? getColor() {
-    return state == TimerRepeatState.pending ? Colors.grey : null;
+    return state == TimerState.pending ? Colors.grey : null;
   }
 
   @override
@@ -251,122 +304,6 @@ class TimerRepeat extends StatelessWidget {
           getIcon(),
           color: getColor(),
         ),
-      ),
-    );
-  }
-}
-
-class CustomTimer extends StatefulWidget {
-  final Duration duration;
-  final void Function()? onStart;
-  final void Function()? onFinished;
-  final bool autoStart;
-
-  const CustomTimer({
-    super.key,
-    required this.duration,
-    this.onStart,
-    this.onFinished,
-    this.autoStart = true,
-  });
-
-  @override
-  State<CustomTimer> createState() => _CustomTimerState();
-}
-
-class _CustomTimerState extends State<CustomTimer> {
-  late Timer _timer;
-  late Duration _start;
-  Duration _countdown = const Duration(seconds: 5);
-  bool _isRunning = false;
-  bool _isCountdown = false;
-
-  @override
-  void initState() {
-    _start = widget.duration;
-
-    if (widget.autoStart) {
-      _startTimer();
-    }
-
-    super.initState();
-  }
-
-  void _startTimer() {
-    _isRunning = true;
-    widget.onStart?.call();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_start.inSeconds == 0) {
-        setState(() {
-          _start = widget.duration;
-        });
-        widget.onFinished?.call();
-      } else {
-        setState(() {
-          _start -= const Duration(seconds: 1);
-        });
-      }
-    });
-  }
-
-  void _startCountdown() {
-    _isCountdown = true;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_countdown.inSeconds == 0) {
-        setState(() {
-          timer.cancel();
-        });
-        _startTimer();
-      } else {
-        setState(() {
-          _countdown -= const Duration(seconds: 1);
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_isRunning) {
-      if (_isCountdown) {
-        return Column(
-          children: [
-            const Text(
-              'Comenzamos en',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              "${_countdown.inSeconds}",
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        );
-      }
-
-      return IconButton.filled(
-        onPressed: () {
-          setState(() {
-            _startCountdown();
-          });
-        },
-        icon: const Icon(Icons.play_arrow_rounded, size: 40),
-      );
-    }
-
-    return Text(
-      "${_start.inMinutes}:${(_start.inSeconds % 60).toString().padLeft(2, '0')}",
-      style: const TextStyle(
-        fontSize: 50,
-        fontWeight: FontWeight.bold,
       ),
     );
   }
