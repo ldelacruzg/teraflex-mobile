@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/shared/widgets/custom_confirm_dialog.dart';
 
 class CustomTimer extends StatefulWidget {
   final Duration duration;
@@ -101,9 +103,24 @@ class _CustomTimerState extends State<CustomTimer> {
 
       return IconButton.filled(
         onPressed: () {
-          setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (_) => CustomConfirmDialog(
+              title: '¿Estás seguro de comenzar?',
+              content: const Text(
+                'Una vez iniciada la tarea no se puede detener. Tendrás una cuenta regresiva de 5 segundos.',
+              ),
+              onCancel: () => context.pop(),
+              onConfirm: () {
+                context.pop();
+                _startCountdown();
+              },
+            ),
+          );
+          /* setState(() {
             _startCountdown();
-          });
+          }); */
         },
         icon: const Icon(Icons.play_arrow_rounded, size: 40),
       );

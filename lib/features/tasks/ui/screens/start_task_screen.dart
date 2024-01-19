@@ -5,6 +5,7 @@ import 'package:teraflex_mobile/features/tasks/ui/blocs/task_execution/task_exec
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
 import 'package:teraflex_mobile/features//tasks/ui/widgets/custom_timer.dart';
+import 'package:teraflex_mobile/shared/widgets/custom_confirm_dialog.dart';
 
 class StartTaskScreen extends StatefulWidget {
   static const String name = 'start_task_screen';
@@ -44,20 +45,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('¿Desea salir de la tarea?'),
+        return CustomConfirmDialog(
+          title: '¿Desea salir de la tarea?',
           content:
               const Text('Si sale de la tarea, perderá el progreso actual.'),
-          actions: [
-            TextButton(
-              onPressed: () => context.pop(false),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () => context.pop(true),
-              child: const Text('Salir'),
-            ),
-          ],
+          onCancel: () => context.pop(false),
+          onConfirm: () => context.pop(true),
         );
       },
     ).then((value) => value ? context.pop() : null);
