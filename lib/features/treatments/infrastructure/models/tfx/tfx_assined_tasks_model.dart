@@ -25,21 +25,25 @@ class TfxAssignedTasksModel {
 }
 
 class AssignedTasksDataModel {
+  int assignmentId;
   AssinedTaskModel task;
   TaskConfigModel setting;
 
   AssignedTasksDataModel({
+    required this.assignmentId,
     required this.task,
     required this.setting,
   });
 
   factory AssignedTasksDataModel.fromJson(Map<String, dynamic> json) =>
       AssignedTasksDataModel(
+        assignmentId: json["assignmentId"],
         task: AssinedTaskModel.fromJson(json["task"]),
         setting: TaskConfigModel.fromJson(json["setting"]),
       );
 
   Map<String, dynamic> toJson() => {
+        "assignmentId": assignmentId,
         "task": task.toJson(),
         "setting": setting.toJson(),
       };

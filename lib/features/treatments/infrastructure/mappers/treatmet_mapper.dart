@@ -20,21 +20,22 @@ class TreatmentMapper {
   }
 
   static List<TreatmentTask> fromTfxAssignedTasks(TfxAssignedTasksModel tasks) {
-    return tasks.data.map((task) {
+    return tasks.data.map((assignment) {
       return TreatmentTask(
+        id: assignment.assignmentId,
         task: AssignedTask(
-          id: task.task.id,
-          title: task.task.title,
-          description: task.task.description,
-          assignmentDate: task.task.assignmentDate,
-          performancedDate: task.task.performanceDate,
-          expirationDate: task.task.expirationDate,
+          id: assignment.task.id,
+          title: assignment.task.title,
+          description: assignment.task.description,
+          assignmentDate: assignment.task.assignmentDate,
+          performancedDate: assignment.task.performanceDate,
+          expirationDate: assignment.task.expirationDate,
         ),
         setting: TaskConfig(
-          timePerRepetition: double.parse(task.setting.timePerRepetition),
-          repetitions: task.setting.repetitions,
-          breakTime: double.parse(task.setting.breakTime),
-          series: task.setting.series,
+          timePerRepetition: double.parse(assignment.setting.timePerRepetition),
+          repetitions: assignment.setting.repetitions,
+          breakTime: double.parse(assignment.setting.breakTime),
+          series: assignment.setting.series,
         ),
       );
     }).toList();

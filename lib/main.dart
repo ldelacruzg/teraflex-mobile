@@ -6,6 +6,7 @@ import 'package:teraflex_mobile/config/theme/app_theme.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/datasources/tfx_task_datasource.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/repositories/task_repository_impl.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/multimedia_list/multimedia_list_cubit.dart';
+import 'package:teraflex_mobile/features/tasks/ui/blocs/task_execution/task_execution_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/datasources/tfx_treatment_datasource.dart';
 import 'package:teraflex_mobile/features/treatments/infrastructure/repositories/treatment_repository_impl.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
@@ -48,6 +49,7 @@ class MainApp extends StatelessWidget {
           create: (context) =>
               MultimediaListCubit(taskRepository: tfxTaskRepository),
         ),
+        BlocProvider(create: (context) => TaskExecutionCubit()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

@@ -43,16 +43,15 @@ final appRouter = GoRouter(
                 final taskId = state.pathParameters['taskId'] ?? 'no-id';
                 return TaskScreen(taskId: taskId);
               },
-              routes: [
-                GoRoute(
-                  path: 'start',
-                  name: StartTaskScreen.name,
-                  builder: (context, state) {
-                    final taskId = state.pathParameters['taskId'] ?? 'no-id';
-                    return StartTaskScreen(taskId: taskId);
-                  },
-                ),
-              ],
+            ),
+            GoRoute(
+              path: 'assignments/:assignmentId/start',
+              name: StartTaskScreen.name,
+              builder: (context, state) {
+                final assignmentId =
+                    state.pathParameters['assignmentId'] ?? 'no-id';
+                return StartTaskScreen(assignmentId: assignmentId);
+              },
             ),
           ],
         ),

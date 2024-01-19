@@ -1,8 +1,13 @@
 class TreatmentTask {
+  final int id;
   final AssignedTask task;
   final TaskConfig setting;
 
-  TreatmentTask({required this.task, required this.setting});
+  TreatmentTask({
+    required this.id,
+    required this.task,
+    required this.setting,
+  });
 }
 
 class AssignedTask {

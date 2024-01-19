@@ -29,6 +29,7 @@ class TreatmentTasksScreen extends StatelessWidget {
 
     if (state.status == StatusUtil.error) {
       return Scaffold(
+        appBar: const CustomTasksAppBar(),
         body: Column(
           children: [
             Center(
@@ -72,7 +73,7 @@ class TreatmentTasksView extends StatelessWidget {
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           final task = tasks[index];
-          return ListTaskItem(task: task);
+          return ListTaskItem(assignment: task);
         },
       ),
     );
@@ -80,19 +81,19 @@ class TreatmentTasksView extends StatelessWidget {
 }
 
 class ListTaskItem extends StatelessWidget {
-  final TreatmentTask task;
+  final TreatmentTask assignment;
 
   const ListTaskItem({
     super.key,
-    required this.task,
+    required this.assignment,
   });
 
   String get status {
-    if (task.task.performancedDate != null) {
+    if (assignment.task.performancedDate != null) {
       return 'Completada';
     }
 
-    if (task.task.expirationDate.isBefore(DateTime.now())) {
+    if (assignment.task.expirationDate.isBefore(DateTime.now())) {
       return 'Vencida';
     }
 
@@ -100,15 +101,15 @@ class ListTaskItem extends StatelessWidget {
   }
 
   bool get enabled {
-    return task.task.performancedDate == null &&
-        task.task.expirationDate.isAfter(DateTime.now());
+    return assignment.task.performancedDate == null &&
+        assignment.task.expirationDate.isAfter(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(
-        task.task.title,
+        assignment.task.title,
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(status),
@@ -127,22 +128,23 @@ class ListTaskItem extends StatelessWidget {
                   InfoItem(
                     icon: Icons.timer_outlined,
                     title: 'Tiempo',
-                    value: TimeUtil.getTime(task.setting.timePerRepetition),
+                    value:
+                        TimeUtil.getTime(assignment.setting.timePerRepetition),
                   ),
                   InfoItem(
                     icon: Icons.repeat_rounded,
                     title: 'Repetición',
-                    value: task.setting.repetitions.toString(),
+                    value: assignment.setting.repetitions.toString(),
                   ),
                   InfoItem(
                     icon: Icons.restart_alt_rounded,
                     title: 'Series',
-                    value: task.setting.series.toString(),
+                    value: assignment.setting.series.toString(),
                   ),
                   InfoItem(
                     icon: Icons.pause_rounded,
                     title: 'Descanso',
-                    value: TimeUtil.getTime(task.setting.breakTime),
+                    value: TimeUtil.getTime(assignment.setting.breakTime),
                   ),
                 ],
               ),
@@ -152,13 +154,15 @@ class ListTaskItem extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () => context
-                        .push('/home/treatments/1/tasks/${task.task.id}'),
+                        .push('/home/treatments/1/tasks/${assignment.task.id}'),
                     child: const Text('Ver tarea'),
                   ),
                   const SizedBox(width: 10),
                   FilledButton(
+                    // /home/treatments/1/assignments/1/start
                     onPressed: enabled
-                        ? () => context.push('/home/treatments/1/tasks/1/start')
+                        ? () => context.push(
+                            '/home/treatments/1/assignments/${assignment.task.id}/start')
                         : null,
                     child: const Text('Iniciar tarea'),
                   )

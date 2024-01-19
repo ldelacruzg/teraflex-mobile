@@ -57,4 +57,18 @@ class AssignedTasksCubit extends Cubit<AssignedTasksState> {
   void changeExpiredTasks() {
     emit(state.copyWith(expiredTasks: !state.expiredTasks));
   }
+
+  TaskConfig getTaskConfig({required int taskId}) {
+    final task = state.tasks.firstWhere((element) => element.task.id == taskId);
+    return task.setting;
+  }
+
+  String getTaskTitle({required int taskId}) {
+    final task = state.tasks.firstWhere((element) => element.task.id == taskId);
+    return task.task.title;
+  }
+
+  TreatmentTask getAssignedTask({required int assigmentId}) {
+    return state.tasks.firstWhere((element) => element.id == assigmentId);
+  }
 }
