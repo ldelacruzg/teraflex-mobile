@@ -220,6 +220,7 @@ class TimerSerie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      initiallyExpanded: true,
       leading: const CircleAvatar(
         child: Icon(Icons.replay_outlined),
       ),
