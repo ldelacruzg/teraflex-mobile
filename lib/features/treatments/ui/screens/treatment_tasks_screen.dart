@@ -162,7 +162,7 @@ class ListTaskItem extends StatelessWidget {
                     // /home/treatments/1/assignments/1/start
                     onPressed: enabled
                         ? () => context.push(
-                            '/home/treatments/1/assignments/${assignment.task.id}/start')
+                            '/home/treatments/1/assignments/${assignment.id}/start')
                         : null,
                     child: const Text('Iniciar tarea'),
                   )

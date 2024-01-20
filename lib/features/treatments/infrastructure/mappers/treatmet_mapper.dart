@@ -32,9 +32,9 @@ class TreatmentMapper {
           expirationDate: assignment.task.expirationDate,
         ),
         setting: TaskConfig(
-          timePerRepetition: double.parse(assignment.setting.timePerRepetition),
+          timePerRepetition: assignment.setting.timePerRepetition,
           repetitions: assignment.setting.repetitions,
-          breakTime: double.parse(assignment.setting.breakTime),
+          breakTime: assignment.setting.breakTime,
           series: assignment.setting.series,
         ),
       );

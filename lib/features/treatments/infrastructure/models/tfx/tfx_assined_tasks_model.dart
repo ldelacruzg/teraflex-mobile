@@ -50,9 +50,9 @@ class AssignedTasksDataModel {
 }
 
 class TaskConfigModel {
-  String timePerRepetition;
+  double timePerRepetition;
   int repetitions;
-  String breakTime;
+  double breakTime;
   int series;
 
   TaskConfigModel({
