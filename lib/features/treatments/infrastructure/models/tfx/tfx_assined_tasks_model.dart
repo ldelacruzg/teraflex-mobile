@@ -66,7 +66,7 @@ class TaskConfigModel {
       TaskConfigModel(
         timePerRepetition: json["timePerRepetition"],
         repetitions: json["repetitions"],
-        breakTime: json["breakTime"],
+        breakTime: double.tryParse(json["breakTime"].toString()) ?? 0.0,
         series: json["series"],
       );
 
