@@ -88,7 +88,8 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       return emit(state.copyWith(
         currentSeries: newSerie,
         currentRepetition: 1,
-        executions: state.changeStatusSerie(status: TimerState.done),
+        executions:
+            state.changeSerieAndRepetitionStatus(status: TimerState.done),
       ));
     }
 

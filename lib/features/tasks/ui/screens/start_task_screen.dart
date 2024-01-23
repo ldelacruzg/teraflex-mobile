@@ -91,13 +91,12 @@ class StartTaskView extends StatelessWidget {
       children: [
         Column(
           children: [
-            Center(
-              child: Text(
-                taskTitle,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
+            Text(
+              taskTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 20),
