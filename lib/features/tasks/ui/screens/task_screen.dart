@@ -60,9 +60,18 @@ class _TaskScreenState extends State<TaskScreen> {
     if (state.status == StatusUtil.empty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Multimedia')),
-        body: Center(
-          child: Text(
-              state.statusMessage ?? 'No hay videos asignados a esta tarea'),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Text(
+              state.statusMessage ?? 'No hay videos asignados a esta tarea',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
         ),
       );
     }
