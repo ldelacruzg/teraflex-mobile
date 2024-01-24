@@ -6,6 +6,7 @@ import 'package:teraflex_mobile/features/settings/ui/screens/security/security_v
 import 'package:teraflex_mobile/features/settings/ui/screens/setting_screen.dart';
 import 'package:teraflex_mobile/features/tasks/ui/screens/start_task_screen.dart';
 import 'package:teraflex_mobile/features/tasks/ui/screens/task_screen.dart';
+import 'package:teraflex_mobile/features/tasks/ui/screens/weekly_summary_screen.dart';
 import 'package:teraflex_mobile/features/treatments/ui/screens/treatment_tasks_screen.dart';
 import 'package:teraflex_mobile/features/welcome_messages/ui/screens/welcome_messages_screen.dart';
 
@@ -51,6 +52,15 @@ final appRouter = GoRouter(
                 final assignmentId =
                     state.pathParameters['assignmentId'] ?? 'no-id';
                 return StartTaskScreen(assignmentId: assignmentId);
+              },
+            ),
+            GoRoute(
+              path: 'assignments/:assignmentId/finish',
+              name: WeeklySummaryScreen.name,
+              builder: (context, state) {
+                final assignmentId =
+                    state.pathParameters['assignmentId'] ?? 'no-id';
+                return WeeklySummaryScreen(assignmentId: assignmentId);
               },
             ),
           ],

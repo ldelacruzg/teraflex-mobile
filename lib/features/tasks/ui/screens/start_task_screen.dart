@@ -68,6 +68,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       body: StartTaskView(
         taskConfig: taskConfig,
         taskTitle: taskTitle,
+        assignmentId: widget.assignmentId,
       ),
     );
   }
@@ -76,11 +77,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 class StartTaskView extends StatelessWidget {
   final TaskConfig taskConfig;
   final String taskTitle;
+  final String assignmentId;
 
   const StartTaskView({
     super.key,
     required this.taskConfig,
     required this.taskTitle,
+    required this.assignmentId,
   });
 
   @override
@@ -165,7 +168,10 @@ class StartTaskView extends StatelessWidget {
           bottom: 20,
           right: 16,
           child: FilledButton(
-            onPressed: state.status == ExecutionStatus.finished ? () {} : null,
+            //onPressed: state.status == ExecutionStatus.finished ? () {} : null,
+            onPressed: () {
+              context.go('/home/treatments/0/assignments/$assignmentId/finish');
+            },
             child: const Text('FINALIZAR'),
           ),
         ),
