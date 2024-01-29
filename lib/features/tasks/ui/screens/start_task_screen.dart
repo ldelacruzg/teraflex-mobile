@@ -168,10 +168,12 @@ class StartTaskView extends StatelessWidget {
           bottom: 20,
           right: 16,
           child: FilledButton(
-            //onPressed: state.status == ExecutionStatus.finished ? () {} : null,
-            onPressed: () {
-              context.go('/home/treatments/0/assignments/$assignmentId/finish');
-            },
+            onPressed: state.status == ExecutionStatus.finished
+                ? () {
+                    context.go(
+                        '/home/treatments/0/assignments/$assignmentId/finish');
+                  }
+                : null,
             child: const Text('FINALIZAR'),
           ),
         ),
