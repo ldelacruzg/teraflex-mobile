@@ -33,6 +33,7 @@ flutter:
   assets:
     - assets/images/welcome_messages/
     - assets/images/home/
+    - assets/images/leaderboard/
     - assets/icons/
     - .env
   fonts:
