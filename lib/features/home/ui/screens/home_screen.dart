@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/home/ui/views/home_view.dart';
+import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/views/leaderboard_view.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/views/treatment_view.dart';
@@ -28,6 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onItemTapped(int index) {
     if (index == 1) {
       context.read<SimpleTreatmentListCubit>().loadSimpleTreatments();
+    }
+
+    if (index == 2) {
+      context.read<CurrentWeekLeaderboardCubit>().getCurrentWeekLeaderboard();
     }
 
     setState(() {
