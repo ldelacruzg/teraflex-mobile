@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teraflex_mobile/config/constants/environment.dart';
+import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/features/leaderboard/domain/entities/leaderboard_row.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
 import 'package:teraflex_mobile/utils/rank.enum.dart';
@@ -12,6 +13,7 @@ class LeaderboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CurrentWeekLeaderboardCubit>().state;
+    final stateGlobalSummary = context.watch<GlobalSummaryCubit>().state;
 
     if (state.status == StatusUtil.loading) {
       return const Center(child: CircularProgressIndicator());
@@ -52,7 +54,7 @@ class LeaderboardView extends StatelessWidget {
 
     return Column(
       children: [
-        const LeaderboardRank(currentRank: Rank.fortaleza),
+        LeaderboardRank(currentRank: stateGlobalSummary.globalSummary.rank),
         Leaderboard(leaderboard: state.leaderboard),
       ],
     );
