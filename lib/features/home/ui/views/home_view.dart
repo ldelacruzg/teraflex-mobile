@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/utils/date_util.dart';
+import 'package:teraflex_mobile/utils/rank.enum.dart';
+import 'package:teraflex_mobile/utils/status_util.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -22,9 +26,36 @@ class HomeView extends StatelessWidget {
     return monthNames[DateTime.now().month - 1];
   }
 
+  double getProgressHistory(BuildContext context) {
+    final state = context.watch<GlobalSummaryCubit>().state;
+    return state.globalSummary.qtyTasksHistory > 0
+        ? state.globalSummary.qtyTasksCompletedHistory /
+            state.globalSummary.qtyTasksHistory
+        : 0;
+  }
+
+  double getProgressWeekly(BuildContext context) {
+    final state = context.watch<GlobalSummaryCubit>().state;
+    return state.globalSummary.qtyTasksWeekly > 0
+        ? state.globalSummary.qtyTasksCompletedWeekly /
+            state.globalSummary.qtyTasksWeekly
+        : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<GlobalSummaryCubit>().state;
     final today = DateTime.now();
+
+    if (state.status == StatusUtil.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.status == StatusUtil.error) {
+      return Center(
+        child: Text(state.statusMessage ?? 'Error desconocido'),
+      );
+    }
 
     return SingleChildScrollView(
       child: Padding(
@@ -39,25 +70,42 @@ class HomeView extends StatelessWidget {
             const SizedBox(height: 20),
             const HorizontalDays(),
             const SizedBox(height: 20),
-            const CustomCardResumen(),
-            const SizedBox(height: 20),
-            const Row(
+            //const CustomCardResumen(),
+            Row(
               children: [
+                CardInfo(
+                  icon: Icons.attach_money_rounded,
+                  title: 'FLEXICOINS',
+                  value: state.globalSummary.flexicoins,
+                ),
+                const Spacer(),
                 CardInfo(
                   icon: Icons.star_rounded,
                   title: 'EXP',
-                  value: '785',
-                ),
-                Spacer(),
-                CardInfo(
-                  icon: Icons.local_fire_department,
-                  title: 'RACHA',
-                  value: '20',
+                  value: state.globalSummary.experience,
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            const CardRank(),
+            Row(
+              children: [
+                CardInfo(
+                  icon: Icons.history,
+                  title: 'HISTORIAL',
+                  isProgress: true,
+                  valueProgress: getProgressHistory(context),
+                ),
+                const Spacer(),
+                CardInfo(
+                  icon: Icons.calendar_month_rounded,
+                  title: 'SEMANAL',
+                  isProgress: true,
+                  valueProgress: getProgressWeekly(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            CardRank(rank: state.globalSummary.rank),
           ],
         ),
       ),
@@ -66,49 +114,41 @@ class HomeView extends StatelessWidget {
 }
 
 class CardRank extends StatelessWidget {
-  const CardRank({super.key});
+  final Rank rank;
+
+  const CardRank({
+    super.key,
+    required this.rank,
+  });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: colorScheme.secondary,
-      elevation: 20,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: Colors.white,
+              //backgroundColor: Colors.white,
               child: Icon(
                 Icons.fitness_center_rounded,
                 size: 30,
-                color: colorScheme.secondary,
+                color: colorScheme.primary,
               ),
             ),
             const SizedBox(width: 20),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'RANGO RECUPERACIÓN',
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  'POSICIÖN: 1',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            Text(
+              'RANGO ${rankToString(rank).toUpperCase()}',
+              maxLines: 1,
+              style: const TextStyle(
+                //color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                overflow: TextOverflow.ellipsis,
+              ),
             )
           ],
         ),
@@ -119,15 +159,21 @@ class CardRank extends StatelessWidget {
 
 class CardInfo extends StatelessWidget {
   final String title;
-  final String value;
+  final int value;
   final IconData icon;
+  final bool isProgress;
+  final double valueProgress;
 
   const CardInfo({
     super.key,
     required this.title,
-    required this.value,
+    this.value = 0,
     required this.icon,
+    this.isProgress = false,
+    this.valueProgress = 0,
   });
+
+  String get valueProgressString => (valueProgress * 100).toStringAsFixed(2);
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +182,8 @@ class CardInfo extends StatelessWidget {
     return SizedBox(
       width: size.width * 0.45,
       child: Card(
-        color: colorScheme.primary,
-        elevation: 20,
+        color: Colors.white,
+        elevation: 1,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
@@ -145,7 +191,7 @@ class CardInfo extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundColor: Colors.white,
+                //backgroundColor: Colors.white,
                 child: Icon(
                   icon,
                   color: colorScheme.primary,
@@ -154,19 +200,32 @@ class CardInfo extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               Text(
-                value,
+                isProgress ? '$valueProgressString %' : value.toString(),
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
+                  //color: Colors.white,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+                  //color: Colors.white,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
+                ),
+              ),
+              Visibility(
+                visible: isProgress,
+                child: const SizedBox(height: 10),
+              ),
+              Visibility(
+                visible: isProgress,
+                child: LinearProgressIndicator(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  value: valueProgress,
                 ),
               ),
             ],
