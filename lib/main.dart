@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teraflex_mobile/config/router/app_router.dart';
 import 'package:teraflex_mobile/config/theme/app_theme.dart';
+import 'package:teraflex_mobile/features/home/infrastructure/datasources/tfx_dashboard_datasource.dart';
+import 'package:teraflex_mobile/features/home/infrastructure/repositories/dashboard_repository_impl.dart';
+import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/datasources/tfx_leaderboard_datasource.dart';
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/repositories/leaderboard_repository_impl.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
@@ -37,6 +40,9 @@ class MainApp extends StatelessWidget {
     final tfxLeaderboardRepository =
         LeaderboardRepositoryImpl(datasource: TfxLeaderboardDatasource());
 
+    final tfxDashboardRepository =
+        DashboardRepositoryImpl(datasource: TfxDashboardDatasource());
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => TreatmentRepositoryCubit()),
@@ -66,7 +72,12 @@ class MainApp extends StatelessWidget {
           create: (context) => CurrentWeekLeaderboardCubit(
             leaderboardRepository: tfxLeaderboardRepository,
           ),
-        )
+        ),
+        BlocProvider(
+          create: (context) => GlobalSummaryCubit(
+            dashboardRepository: tfxDashboardRepository,
+          ),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
