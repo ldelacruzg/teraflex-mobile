@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/auth/domain/entities/login_token.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/datasources/tfx_login_datasource.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_repository_impl.dart';
+import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String name = 'login_screen';
@@ -99,9 +101,12 @@ class _LoginFormState extends State<LoginForm> {
     // realizar petición para obtener los datos del usuario
     // guardar los datos del usuario en el storage
     final user = await _loginRepository.getProfile();
-    await _localStorageRepository
-        .setUser(user)
-        .then((value) => context.go('/home'));
+    await _localStorageRepository.setUser(user).then((value) {
+      // realizar petición para obtener los datos principales (dashboard)
+      context.read<GlobalSummaryCubit>().getGlobalSummary();
+
+      context.go('/home');
+    });
   }
 
   void _onChangePasswordVisibility() {
