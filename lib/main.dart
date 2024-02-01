@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teraflex_mobile/config/router/app_router.dart';
-import 'package:teraflex_mobile/config/theme/app_theme.dart';
+import 'package:teraflex_mobile/config/theme/bloc/app_theme/app_theme_cubit.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/datasources/tfx_dashboard_datasource.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/repositories/dashboard_repository_impl.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
@@ -78,11 +78,17 @@ class MainApp extends StatelessWidget {
             dashboardRepository: tfxDashboardRepository,
           ),
         ),
+        BlocProvider(create: (context) => AppThemeCubit()),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: appRouter,
-        theme: AppTheme().themeData,
+      child: BlocBuilder<AppThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            routerConfig: appRouter,
+            theme:
+                state == ThemeState.dark ? ThemeData.dark() : ThemeData.light(),
+          );
+        },
       ),
     );
   }

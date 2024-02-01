@@ -125,7 +125,6 @@ class CardRank extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
@@ -182,7 +181,6 @@ class CardInfo extends StatelessWidget {
     return SizedBox(
       width: size.width * 0.45,
       child: Card(
-        color: Colors.white,
         elevation: 1,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -281,16 +279,8 @@ class DayItem extends StatelessWidget {
 
     return SizedBox(
       width: 100,
-      child: Container(
-        margin: const EdgeInsets.only(right: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: isToday ? colorScheme.secondary : Colors.white,
-          border: Border.all(
-            color: colorScheme.secondary,
-            width: 1,
-          ),
-        ),
+      child: Card(
+        color: isToday ? colorScheme.primary : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(

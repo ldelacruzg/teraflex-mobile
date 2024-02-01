@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/config/theme/bloc/app_theme/app_theme_cubit.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/features/home/ui/views/home_view.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
@@ -47,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appThemeState = context.watch<AppThemeCubit>().state;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -61,6 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            onPressed: () => context.read<AppThemeCubit>().toggleTheme(),
+            icon: Icon(
+              appThemeState == ThemeState.light
+                  ? Icons.dark_mode_rounded
+                  : Icons.light_mode_rounded,
+            ),
+          ),
           IconButton(
             onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.settings_rounded),

@@ -249,6 +249,12 @@ class VideoPlaylistItem extends StatelessWidget {
     return playing ? Icons.pause : Icons.play_arrow;
   }
 
+  Color getTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark || playing
+        ? Colors.white
+        : Colors.black;
+  }
+
   void showMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -266,12 +272,21 @@ class VideoPlaylistItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorSchema = Theme.of(context).colorScheme;
-
     return GestureDetector(
       onTap: video.status ? onTap : () => showMessage(context),
-      child: Container(
-        color: playing ? colorSchema.secondary : Colors.transparent,
+      child: Card(
+        color: playing
+            ? Theme.of(context).colorScheme.primary.withOpacity(0.7)
+            : null,
+        shape: ShapeBorder.lerp(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          1,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Row(
@@ -291,13 +306,13 @@ class VideoPlaylistItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: playing ? Colors.white : Colors.black,
+                        color: getTextColor(context),
                       ),
                     ),
                     Text(
                       'Subido por: ${video.uploadedBy}',
                       style: TextStyle(
-                        color: playing ? Colors.white : Colors.black,
+                        color: getTextColor(context),
                       ),
                     ),
                   ],

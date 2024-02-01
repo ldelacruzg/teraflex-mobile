@@ -94,12 +94,15 @@ class StartTaskView extends StatelessWidget {
       children: [
         Column(
           children: [
-            Text(
-              taskTitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                taskTitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -249,6 +252,7 @@ class TimerSerie extends StatelessWidget {
             child: Text(
               currentSerie == (parentSerie + 1) ? 'En Curso' : strStatus,
               style: const TextStyle(
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
               ),

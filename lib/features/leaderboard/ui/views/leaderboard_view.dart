@@ -37,13 +37,16 @@ class LeaderboardView extends StatelessWidget {
           // rangos
           const LeaderboardRank(currentRank: Rank.renovacion),
           const Spacer(),
-          Center(
-            child: Text(
-              state.statusMessage ?? 'No hay datos',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                state.statusMessage ?? 'No hay datos',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -259,10 +262,13 @@ class LeaderboardItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Row(
               children: [
-                Icon(icon),
+                Icon(icon, color: Colors.black),
                 Text(
                   '${accuracy * 100} %',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),
