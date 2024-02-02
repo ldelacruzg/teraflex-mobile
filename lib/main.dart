@@ -89,13 +89,6 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => AppThemeCubit()),
         BlocProvider(
           create: (context) => AuthCubit(
-            localStorageRepository: LoginLocalStorageRepositoryImpl(
-              datasource: IsarDBLoginLocalStorageDatasource(),
-            ),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => AuthCubit(
             localStorageRepository: localStorageRepository,
           ),
         ),
