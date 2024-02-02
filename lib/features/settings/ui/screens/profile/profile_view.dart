@@ -3,11 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
 import 'package:teraflex_mobile/features/settings/ui/blocs/profile_form/profile_form_cubit.dart';
+import 'package:teraflex_mobile/utils/status_util.dart';
 
 class ProfileScreen extends StatelessWidget {
   static String name = 'profile_screen';
 
   const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = context.watch<AuthCubit>().state;
+
+    if (authState.status == StatusUtil.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return const ProfileView();
+  }
+}
+
+class ProfileView extends StatelessWidget {
+  const ProfileView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +75,9 @@ class _FormProfileState extends State<FormProfile> {
     final state = context.read<AuthCubit>().state;
     context.read<ProfileFormCubit>().initialize(state.user!);
 
-    _birthDate.text = state.user!.birthDate.isNotEmpty
-        ? DateFormat('yyyy-MM-dd').format(DateTime.parse(state.user!.birthDate))
+    _birthDate.text = state.user!.birthDate != null
+        ? DateFormat('yyyy-MM-dd')
+            .format(DateTime.parse(state.user!.birthDate!))
         : '';
   }
 

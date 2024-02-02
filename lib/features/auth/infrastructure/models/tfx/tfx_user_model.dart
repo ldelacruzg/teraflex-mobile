@@ -27,9 +27,9 @@ class Data {
   String firstName;
   String lastName;
   String docNumber;
-  String phone;
-  String description;
-  String birthDate;
+  String? phone;
+  String? description;
+  String? birthDate;
   String createdAt;
   String updatedAt;
   String role;

@@ -184,6 +184,7 @@ class _LoginFormState extends State<LoginForm> {
           // DNI
           TextFormField(
             controller: _dniController,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'DNI',

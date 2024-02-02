@@ -9,17 +9,16 @@ class ProfileFormCubit extends Cubit<ProfileFormState> {
   ProfileFormCubit() : super(const ProfileFormState());
 
   void initialize(User user) {
-    emit(state.copyWith(
+    emit(const ProfileFormState().copyWith(
       name: user.firstName,
       lastName: user.lastName,
       dni: user.docNumber,
       phone: user.phone,
       description: user.description,
-      birthDate: user.birthDate.isNotEmpty
-          ? DateFormat('yyyy-MM-dd').format(DateTime.parse(user.birthDate))
-          : '',
+      birthDate: user.birthDate != null
+          ? DateFormat('yyyy-MM-dd').format(DateTime.parse(user.birthDate!))
+          : null,
     ));
-    print('birthDate::: ${state.birthDate.isEmpty}');
   }
 
   void onSubmit() {

@@ -9,10 +9,10 @@ class User {
   final String firstName;
   final String lastName;
   final String docNumber;
-  final String phone;
-  final String description;
+  final String? phone;
+  final String? description;
   final bool status;
-  final String birthDate;
+  final String? birthDate;
 
   User({
     required this.id,

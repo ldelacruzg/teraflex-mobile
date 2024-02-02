@@ -78,12 +78,27 @@ int _userEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.birthDate.length * 3;
-  bytesCount += 3 + object.description.length * 3;
+  {
+    final value = object.birthDate;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.description;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.docNumber.length * 3;
   bytesCount += 3 + object.firstName.length * 3;
   bytesCount += 3 + object.lastName.length * 3;
-  bytesCount += 3 + object.phone.length * 3;
+  {
+    final value = object.phone;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -110,13 +125,13 @@ User _userDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = User(
-    birthDate: reader.readString(offsets[0]),
-    description: reader.readString(offsets[1]),
+    birthDate: reader.readStringOrNull(offsets[0]),
+    description: reader.readStringOrNull(offsets[1]),
     docNumber: reader.readString(offsets[2]),
     firstName: reader.readString(offsets[3]),
     id: reader.readLong(offsets[4]),
     lastName: reader.readString(offsets[5]),
-    phone: reader.readString(offsets[6]),
+    phone: reader.readStringOrNull(offsets[6]),
     status: reader.readBool(offsets[7]),
   );
   object.isarId = id;
@@ -131,9 +146,9 @@ P _userDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -143,7 +158,7 @@ P _userDeserializeProp<P>(
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readBool(offset)) as P;
     default:
@@ -239,8 +254,24 @@ extension UserQueryWhere on QueryBuilder<User, User, QWhereClause> {
 }
 
 extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
+  QueryBuilder<User, User, QAfterFilterCondition> birthDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> birthDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'birthDate',
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> birthDateEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -253,7 +284,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> birthDateGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -268,7 +299,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> birthDateLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -283,8 +314,8 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> birthDateBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -369,8 +400,24 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     });
   }
 
+  QueryBuilder<User, User, QAfterFilterCondition> descriptionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> descriptionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'description',
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> descriptionEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -383,7 +430,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> descriptionGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -398,7 +445,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> descriptionLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -413,8 +460,8 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> descriptionBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1008,8 +1055,24 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
     });
   }
 
+  QueryBuilder<User, User, QAfterFilterCondition> phoneIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'phone',
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterFilterCondition> phoneIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'phone',
+      ));
+    });
+  }
+
   QueryBuilder<User, User, QAfterFilterCondition> phoneEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1022,7 +1085,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> phoneGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1037,7 +1100,7 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> phoneLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1052,8 +1115,8 @@ extension UserQueryFilter on QueryBuilder<User, User, QFilterCondition> {
   }
 
   QueryBuilder<User, User, QAfterFilterCondition> phoneBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1421,13 +1484,13 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
     });
   }
 
-  QueryBuilder<User, String, QQueryOperations> birthDateProperty() {
+  QueryBuilder<User, String?, QQueryOperations> birthDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'birthDate');
     });
   }
 
-  QueryBuilder<User, String, QQueryOperations> descriptionProperty() {
+  QueryBuilder<User, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
     });
@@ -1457,7 +1520,7 @@ extension UserQueryProperty on QueryBuilder<User, User, QQueryProperty> {
     });
   }
 
-  QueryBuilder<User, String, QQueryOperations> phoneProperty() {
+  QueryBuilder<User, String?, QQueryOperations> phoneProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phone');
     });
