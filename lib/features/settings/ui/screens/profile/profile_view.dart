@@ -120,7 +120,7 @@ class _FormProfileState extends State<FormProfile> {
         children: [
           // Nombres
           TextFormField(
-            //controller: _name,
+            readOnly: true,
             initialValue: profileFormState.name,
             onChanged: (value) {
               context.read<ProfileFormCubit>().nameChanged(value);
@@ -137,6 +137,7 @@ class _FormProfileState extends State<FormProfile> {
 
           // Apellidos
           TextFormField(
+            readOnly: true,
             initialValue: profileFormState.lastName,
             onChanged: (value) {
               context.read<ProfileFormCubit>().lastNameChanged(value);
@@ -166,6 +167,7 @@ class _FormProfileState extends State<FormProfile> {
 
           // Teléfono
           TextFormField(
+            readOnly: true,
             initialValue: profileFormState.phone,
             onChanged: (value) {
               context.read<ProfileFormCubit>().phoneChanged(value);
@@ -191,7 +193,7 @@ class _FormProfileState extends State<FormProfile> {
               prefixIcon: Icon(Icons.calendar_today_rounded),
             ),
             onTap: () async {
-              FocusScope.of(context).requestFocus(FocusNode());
+              /* FocusScope.of(context).requestFocus(FocusNode());
 
               showDatePicker(
                 context: context,
@@ -209,7 +211,7 @@ class _FormProfileState extends State<FormProfile> {
                       .read<ProfileFormCubit>()
                       .birthDateChanged(formattedDate);
                 }
-              });
+              }); */
             },
           ),
           const SizedBox(height: 20),
@@ -228,22 +230,16 @@ class _FormProfileState extends State<FormProfile> {
           const SizedBox(height: 20),
 
           // Botón de Guardar
-          Row(
+          /* Row(
             children: [
               Expanded(
                 child: FilledButton(
-                  onPressed: () {
-                    print(
-                        'submit valid::: ${_formKey.currentState?.validate()}');
-                    //print('submit::: ${_name.text}');
-                    print('submit::: ${profileFormState.name}');
-                    print('submit::: ${profileFormState.lastName}');
-                  },
+                  onPressed: () {},
                   child: const Text('GUARDAR'),
                 ),
               ),
             ],
-          ),
+          ), */
         ],
       ),
     );
