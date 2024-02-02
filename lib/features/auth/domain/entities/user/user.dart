@@ -12,6 +12,7 @@ class User {
   final String phone;
   final String description;
   final bool status;
+  final String birthDate;
 
   User({
     required this.id,
@@ -21,6 +22,7 @@ class User {
     required this.phone,
     required this.description,
     required this.status,
+    required this.birthDate,
   });
 
   getObjetc() {
@@ -32,6 +34,7 @@ class User {
       'phone': phone,
       'description': description,
       'status': status,
+      'birthDate': birthDate,
     };
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
+import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
 
 final _loginLocalRepository = LoginLocalStorageRepositoryImpl(
   datasource: IsarDBLoginLocalStorageDatasource(),
@@ -26,6 +28,7 @@ class SettingScreen extends StatelessWidget {
             leading: const CircleAvatar(child: Icon(Icons.person_rounded)),
             trailing: const Icon(Icons.arrow_forward_rounded),
             onTap: () {
+              context.read<AuthCubit>().loadUserFromLocalStorage();
               context.push('/settings/profile');
             },
           ),

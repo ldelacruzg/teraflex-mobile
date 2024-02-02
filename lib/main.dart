@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teraflex_mobile/config/router/app_router.dart';
 import 'package:teraflex_mobile/config/theme/bloc/app_theme/app_theme_cubit.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
+import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/datasources/tfx_dashboard_datasource.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/repositories/dashboard_repository_impl.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/datasources/tfx_leaderboard_datasource.dart';
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/repositories/leaderboard_repository_impl.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
+import 'package:teraflex_mobile/features/settings/ui/blocs/profile_form/profile_form_cubit.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/datasources/tfx_task_datasource.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/repositories/task_repository_impl.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/multimedia_list/multimedia_list_cubit.dart';
@@ -42,6 +46,10 @@ class MainApp extends StatelessWidget {
 
     final tfxDashboardRepository =
         DashboardRepositoryImpl(datasource: TfxDashboardDatasource());
+
+    final localStorageRepository = LoginLocalStorageRepositoryImpl(
+      datasource: IsarDBLoginLocalStorageDatasource(),
+    );
 
     return MultiBlocProvider(
       providers: [
@@ -79,6 +87,19 @@ class MainApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (context) => AppThemeCubit()),
+        BlocProvider(
+          create: (context) => AuthCubit(
+            localStorageRepository: LoginLocalStorageRepositoryImpl(
+              datasource: IsarDBLoginLocalStorageDatasource(),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AuthCubit(
+            localStorageRepository: localStorageRepository,
+          ),
+        ),
+        BlocProvider(create: (context) => ProfileFormCubit()),
       ],
       child: BlocBuilder<AppThemeCubit, ThemeState>(
         builder: (context, state) {

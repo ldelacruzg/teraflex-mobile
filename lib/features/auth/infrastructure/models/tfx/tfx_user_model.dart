@@ -29,7 +29,7 @@ class Data {
   String docNumber;
   String phone;
   String description;
-  dynamic birthDate;
+  String birthDate;
   String createdAt;
   String updatedAt;
   String role;

@@ -10,5 +10,6 @@ class UserMapper {
         phone: user.data.phone,
         description: user.data.description,
         status: user.data.status,
+        birthDate: user.data.birthDate,
       );
 }
