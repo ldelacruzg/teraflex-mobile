@@ -17,4 +17,9 @@ class LoginRepositotyImpl extends LoginRepository {
   Future<User> getProfile() {
     return datasource.getProfile();
   }
+
+  @override
+  Future<bool> changePassword(String newPassword) {
+    return datasource.changePassword(newPassword);
+  }
 }

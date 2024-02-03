@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:teraflex_mobile/config/constants/dio_teraflex_api.dart';
 import 'package:teraflex_mobile/config/constants/environment.dart';
 import 'package:teraflex_mobile/features/auth/domain/datasources/login_datasource.dart';
 import 'package:teraflex_mobile/features/auth/domain/entities/login_token.dart';
@@ -77,5 +78,26 @@ class TfxLoginDatasource extends LoginDatasource {
 
     final tfxUser = TfxUserModel.fromJson(response.data);
     return UserMapper.fromTfxUser(tfxUser);
+  }
+
+  @override
+  Future<bool> changePassword(String newPassword) async {
+    late Response<dynamic> response;
+    final dio = await DioTeraflexAPI.dio;
+    bool result = false;
+
+    try {
+      response = await dio.post('/auth/change-password', data: {
+        'password': newPassword,
+      });
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      throw Exception('Error desconocido');
+    }
+
+    return result;
   }
 }

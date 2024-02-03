@@ -4,7 +4,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teraflex_mobile/config/router/app_router.dart';
 import 'package:teraflex_mobile/config/theme/bloc/app_theme/app_theme_cubit.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/datasources/isardb_login_local_storage_datasource.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/datasources/tfx_login_datasource.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
+import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_repository_impl.dart';
 import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/datasources/tfx_dashboard_datasource.dart';
 import 'package:teraflex_mobile/features/home/infrastructure/repositories/dashboard_repository_impl.dart';
@@ -51,6 +53,10 @@ class MainApp extends StatelessWidget {
       datasource: IsarDBLoginLocalStorageDatasource(),
     );
 
+    final tfxLoginRepository = LoginRepositotyImpl(
+      datasource: TfxLoginDatasource(),
+    );
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => TreatmentRepositoryCubit()),
@@ -90,6 +96,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthCubit(
             localStorageRepository: localStorageRepository,
+            loginRepository: tfxLoginRepository,
           ),
         ),
         BlocProvider(create: (context) => ProfileFormCubit()),

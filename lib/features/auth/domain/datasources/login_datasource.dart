@@ -8,4 +8,6 @@ abstract class LoginDatasource {
   });
 
   Future<User> getProfile();
+
+  Future<bool> changePassword(String newPassword);
 }
