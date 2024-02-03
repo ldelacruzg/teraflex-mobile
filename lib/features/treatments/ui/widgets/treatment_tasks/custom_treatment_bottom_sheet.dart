@@ -25,7 +25,7 @@ class CustomTreatmentBottomSheet extends StatelessWidget {
             padding:
                 const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 20),
             decoration: BoxDecoration(
-              color: Colors.blueAccent[50],
+              color: Theme.of(context).scaffoldBackgroundColor,
             ),
             child: SingleChildScrollView(
               controller: scrollController,
