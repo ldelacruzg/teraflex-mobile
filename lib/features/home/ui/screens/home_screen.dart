@@ -28,6 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
     const LeaderboardView(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<GlobalSummaryCubit>().getGlobalSummary();
+  }
+
   void _onItemTapped(int index) {
     if (index == 0) {
       context.read<GlobalSummaryCubit>().getGlobalSummary();
@@ -67,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () => context.read<AppThemeCubit>().toggleTheme(),
             icon: Icon(
-              appThemeState == ThemeState.light
+              appThemeState.currentThemeState == ThemeState.light
                   ? Icons.dark_mode_rounded
                   : Icons.light_mode_rounded,
             ),

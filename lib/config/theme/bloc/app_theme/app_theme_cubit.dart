@@ -16,6 +16,8 @@ class AppThemeState extends Equatable {
     this.status = StatusUtil.initial,
   });
 
+  ThemeState get currentThemeState => themeState;
+
   ThemeData get currentTheme =>
       themeState == ThemeState.light ? ThemeData.light() : ThemeData.dark();
 
