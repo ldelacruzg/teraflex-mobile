@@ -234,12 +234,38 @@ class CardInfo extends StatelessWidget {
   }
 }
 
-class HorizontalDays extends StatelessWidget {
+class HorizontalDays extends StatefulWidget {
   const HorizontalDays({super.key});
+
+  @override
+  State<HorizontalDays> createState() => _HorizontalDaysState();
+}
+
+class _HorizontalDaysState extends State<HorizontalDays> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      scrollToCurrentDay();
+    });
+  }
+
+  void scrollToCurrentDay() {
+    double offset = DateTime.now().weekday * 100.0;
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _scrollController,
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(7, (index) {
@@ -280,7 +306,7 @@ class DayItem extends StatelessWidget {
     return SizedBox(
       width: 100,
       child: Card(
-        color: isToday ? colorScheme.primary : null,
+        color: isToday ? colorScheme.onPrimary : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(
@@ -290,14 +316,14 @@ class DayItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: isToday ? Colors.white : null,
+                  color: isToday ? colorScheme.primary : null,
                 ),
               ),
               Text(
                 dayName,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: isToday ? Colors.white : null,
+                  color: isToday ? colorScheme.primary : null,
                 ),
               ),
             ],
