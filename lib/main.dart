@@ -26,6 +26,7 @@ import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assi
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_repository/treatment_repository_cubit.dart';
+import 'package:teraflex_mobile/utils/status_util.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -101,16 +102,46 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => ProfileFormCubit()),
       ],
-      child: BlocBuilder<AppThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            routerConfig: appRouter,
-            theme:
-                state == ThemeState.dark ? ThemeData.dark() : ThemeData.light(),
-          );
-        },
-      ),
+      child: const AppView(),
+    );
+  }
+}
+
+class AppView extends StatefulWidget {
+  const AppView({
+    super.key,
+  });
+
+  @override
+  State<AppView> createState() => _AppViewState();
+}
+
+class _AppViewState extends State<AppView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AppThemeCubit>().init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<AppThemeCubit>().state;
+
+    if (state.status == StatusUtil.loading) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerConfig: appRouter,
+      theme: state.currentTheme,
     );
   }
 }
