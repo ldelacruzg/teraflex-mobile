@@ -254,7 +254,7 @@ class _HorizontalDaysState extends State<HorizontalDays> {
   }
 
   void scrollToCurrentDay() {
-    double offset = DateTime.now().weekday * 100.0;
+    double offset = (DateTime.now().weekday - 1) * 100.0;
     _scrollController.animateTo(
       offset,
       duration: const Duration(milliseconds: 500),
