@@ -35,7 +35,7 @@ class LeaderboardView extends StatelessWidget {
       return Column(
         children: [
           // rangos
-          const LeaderboardRank(currentRank: Rank.renovacion),
+          LeaderboardRank(currentRank: stateGlobalSummary.globalSummary.rank),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
