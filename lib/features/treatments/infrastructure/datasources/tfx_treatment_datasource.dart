@@ -18,9 +18,9 @@ class TfxTreatmentDatasource extends TreatmentDatasource {
 
     try {
       response = await dio.get('/treatments', queryParameters: {
-        'patient-id': patientId,
-        'treatment-active': treatmentActive,
-        'tasks-number': true,
+        'patientId': patientId,
+        'treatmentActive': treatmentActive,
+        'tasksNumber': true,
       });
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
