@@ -92,8 +92,9 @@ class ListTaskItem extends StatelessWidget {
     if (assignment.task.performancedDate != null) {
       return 'Completada';
     }
-
-    if (assignment.task.expirationDate.isBefore(DateTime.now())) {
+    
+    final now = DateTime.now();
+    if (assignment.task.expirationDate.isBefore(DateTime(now.year, now.month, now.day))) {
       return 'Vencida';
     }
 
@@ -101,8 +102,10 @@ class ListTaskItem extends StatelessWidget {
   }
 
   bool get enabled {
+    final now = DateTime.now();
+    final currentDate = DateTime(now.year, now.month, now.day);
     return assignment.task.performancedDate == null &&
-        assignment.task.expirationDate.isAfter(DateTime.now());
+        (currentDate.isBefore(assignment.task.expirationDate) || currentDate.isAtSameMomentAs(assignment.task.expirationDate));
   }
 
   @override
