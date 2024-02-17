@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class DateUtil {
   static List<DateTime> thisWeek() {
     final today = DateTime.now();
@@ -13,5 +15,13 @@ class DateUtil {
 
   static String getShortDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
+  }
+
+  static String convertDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
+
+    print("date::::::::::::::::: $formattedDate");
+    return formattedDate;
   }
 }

@@ -24,7 +24,7 @@ class SettingScreen extends StatelessWidget {
         children: [
           ListTile(
             title: const Text('Información personal'),
-            subtitle: const Text('Nombre, correo, etc'),
+            subtitle: const Text('Nombre, cédula, etc'),
             leading: const CircleAvatar(child: Icon(Icons.person_rounded)),
             trailing: const Icon(Icons.arrow_forward_rounded),
             onTap: () {
@@ -34,7 +34,7 @@ class SettingScreen extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Seguridad'),
-            subtitle: const Text('Contraseña, bloqueo, etc'),
+            subtitle: const Text('Cambio de contraseña'),
             leading: const CircleAvatar(child: Icon(Icons.security_rounded)),
             trailing: const Icon(Icons.arrow_forward_rounded),
             onTap: () {
