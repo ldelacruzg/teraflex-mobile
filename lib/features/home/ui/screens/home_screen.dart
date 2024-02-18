@@ -79,6 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
+            onPressed: () => context.push('/notifications'),
+            icon: const Icon(Icons.notifications_rounded),
+          ),
+          IconButton(
             onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.settings_rounded),
           ),

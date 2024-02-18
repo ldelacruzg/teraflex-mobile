@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teraflex_mobile/features/auth/domain/entities/user/user.dart';
 import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
+import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
 import 'package:teraflex_mobile/utils/date_util.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 
@@ -32,6 +33,7 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notificationState = context.watch<NotificationsCubit>().state;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Información Personal'),
@@ -158,12 +160,41 @@ class ProfileView extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
 
-              /*Text('Apellidos:', style: TextStyle(fontSize: 18)),
-              Text('Cédula:', style: TextStyle(fontSize: 18)),
-              Text('Teléfono:', style: TextStyle(fontSize: 18)),
-              Text('Fecha de nacimiento:', style: TextStyle(fontSize: 18)),
-              Text('Descripción:', style: TextStyle(fontSize: 18)), */
+              // Notificaciones
+              Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Notificaciones',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text("Noti ::: ${notificationState.status.name}"),
+                            TextButton(
+                              onPressed: () {
+                                context
+                                    .read<NotificationsCubit>()
+                                    .requestPermissions();
+                              },
+                              child: const Text('Habilitar'),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),

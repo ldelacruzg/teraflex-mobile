@@ -20,8 +20,6 @@ class DateUtil {
   static String convertDate(String date) {
     DateTime parsedDate = DateTime.parse(date);
     String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
-
-    print("date::::::::::::::::: $formattedDate");
     return formattedDate;
   }
 }
