@@ -9,6 +9,8 @@ environment:
 dependencies:
   dio: ^5.4.0
   equatable: ^2.0.5
+  firebase_core: ^2.25.4
+  firebase_messaging: ^14.7.15
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
