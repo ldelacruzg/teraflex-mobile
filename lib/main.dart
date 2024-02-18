@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,6 +15,7 @@ import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_sum
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/datasources/tfx_leaderboard_datasource.dart';
 import 'package:teraflex_mobile/features/leaderboard/infrastructure/repositories/leaderboard_repository_impl.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
+import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
 import 'package:teraflex_mobile/features/settings/ui/blocs/profile_form/profile_form_cubit.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/datasources/tfx_task_datasource.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/repositories/task_repository_impl.dart';
@@ -29,8 +31,14 @@ import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_repositor
 import 'package:teraflex_mobile/utils/status_util.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificationsCubit.initializeFCM();
   await dotenv.load(fileName: ".env");
-  runApp(const MainApp());
+  runApp(MultiBlocProvider(
+    providers: [BlocProvider(create: (context) => NotificationsCubit())],
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
