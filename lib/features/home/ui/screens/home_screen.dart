@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<GlobalSummaryCubit>().getGlobalSummary();
+    context.read<NotificationsCubit>().loadNotifications();
   }
 
   void _onItemTapped(int index) {
@@ -56,6 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final appThemeState = context.watch<AppThemeCubit>().state;
+    final lenNotification =
+        context.watch<NotificationsCubit>().state.myNotifications.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
               context.read<NotificationsCubit>().loadNotifications();
               context.push('/notifications');
             },
-            icon: const Icon(Icons.notifications_rounded),
+            icon: Badge(
+              label: Text('$lenNotification'),
+              child: const Icon(Icons.notifications_rounded),
+            ),
           ),
           IconButton(
             onPressed: () => context.push('/settings'),

@@ -43,4 +43,17 @@ class TfxNotificationDatasource extends NotificationDatasorce {
 
     return notifications;
   }
+
+  @override
+  Future<void> deleteNotification({required int id}) async {
+    final dio = await DioTeraflexAPI.dio;
+
+    try {
+      await dio.delete('/notification/delete/$id');
+    } on DioException catch (e) {
+      throw Exception('Error controlado ${e.response?.data.toString()}');
+    } catch (e) {
+      throw Exception('Error desconocido ${e.toString()}');
+    }
+  }
 }

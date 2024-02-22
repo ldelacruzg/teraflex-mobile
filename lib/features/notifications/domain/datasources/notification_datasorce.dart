@@ -5,6 +5,8 @@ abstract class NotificationDatasorce {
   Future<void> registerToken({required String token, required String device});
 
   // eliminar notificación
+  Future<void> deleteNotification({required int id});
+
   // obtener notificaciones
   Future<List<MyNotification>> getNotifications();
 }

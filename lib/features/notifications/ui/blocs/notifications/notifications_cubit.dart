@@ -89,18 +89,29 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   }
 
   void _onPushNotificationReceived(PushMessage newNotification) async {
-    // TODO: Realizar petición para obtener las notificaciones
     loadNotifications();
   }
 
   void loadNotifications() async {
-    print('Cargando notificaciones');
     emit(state.copyWith(globalStatus: StatusUtil.loading));
     try {
       final notifications = await notificationRepository.getNotifications();
       emit(state.copyWith(
         myNotifications: notifications,
         globalStatus: StatusUtil.success,
+      ));
+    } catch (e) {
+      emit(state.copyWith(globalStatus: StatusUtil.error));
+    }
+  }
+
+  void deleteNotification(int id) async {
+    try {
+      await notificationRepository.deleteNotification(id: id);
+      emit(state.copyWith(
+        globalStatus: StatusUtil.success,
+        myNotifications:
+            state.myNotifications.where((element) => element.id != id).toList(),
       ));
     } catch (e) {
       emit(state.copyWith(globalStatus: StatusUtil.error));

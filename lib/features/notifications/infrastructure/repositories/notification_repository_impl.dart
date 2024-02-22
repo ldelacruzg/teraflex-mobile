@@ -16,4 +16,9 @@ class NotificationRepositoryImpl extends NotificationRepository {
   Future<List<MyNotification>> getNotifications() {
     return datasource.getNotifications();
   }
+
+  @override
+  Future<void> deleteNotification({required int id}) {
+    return datasource.deleteNotification(id: id);
+  }
 }

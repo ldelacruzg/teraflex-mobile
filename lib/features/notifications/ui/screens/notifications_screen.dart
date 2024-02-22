@@ -9,11 +9,10 @@ class NotificationsScreen extends StatelessWidget {
 
   const NotificationsScreen({super.key});
 
-  Widget notificationView(BuildContext context) {
-    final state = context.watch<NotificationsCubit>().state;
-    final notificationLength = state.myNotifications.length;
+  Widget notificationView(List<MyNotification> notifications) {
+    final notificationLength = notifications.length;
     return notificationLength > 0
-        ? NotificationView(notifications: state.myNotifications)
+        ? NotificationView(notifications: notifications)
         : const Center(child: Text('No hay notificaciones'));
   }
 
@@ -31,7 +30,7 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: state.globalStatus == StatusUtil.loading
           ? loadingView()
-          : notificationView(context),
+          : notificationView(state.myNotifications),
     );
   }
 }
@@ -54,15 +53,33 @@ class NotificationView extends StatelessWidget {
           key: Key(notification.id.toString()),
           confirmDismiss: (direction) async {
             try {
-              print("eliminar ${notification.id}");
-              await Future.delayed(const Duration(seconds: 2));
+              context
+                  .read<NotificationsCubit>()
+                  .deleteNotification(notification.id);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Notificación eliminada'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+
               return Future.value(true);
-              //throw Exception('Error al eliminar la notificación');
             } catch (e) {
-              print("Error al eliminar ${notification.id}");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No se pudo eliminar la notificación'),
+                ),
+              );
+
               return Future.value(false);
             }
           },
+          background: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(right: 20.0),
+            child: const CircularProgressIndicator(),
+          ),
           child: ListTile(
             title: Text(notification.title),
             subtitle: Column(
