@@ -72,10 +72,12 @@ class CustomTaskFilters extends StatelessWidget {
 class CustomSwitch extends StatelessWidget {
   final String title;
   final bool value;
+  final bool disabled;
   final void Function()? onChanged;
 
   const CustomSwitch({
     super.key,
+    this.disabled = false,
     required this.title,
     required this.value,
     this.onChanged,
@@ -89,7 +91,7 @@ class CustomSwitch extends StatelessWidget {
         Text(title),
         Switch(
           value: value,
-          onChanged: (value) => onChanged?.call(),
+          onChanged: disabled ? null : (value) => onChanged?.call(),
         ),
       ],
     );

@@ -6,6 +6,7 @@ import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_sum
 import 'package:teraflex_mobile/features/home/ui/views/home_view.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
 import 'package:teraflex_mobile/features/leaderboard/ui/views/leaderboard_view.dart';
+import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/views/treatment_view.dart';
 import 'package:teraflex_mobile/shared/widgets/custom_navigation_bar.dart';
@@ -79,7 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
-            onPressed: () => context.push('/notifications'),
+            onPressed: () {
+              context.read<NotificationsCubit>().loadNotifications();
+              context.push('/notifications');
+            },
             icon: const Icon(Icons.notifications_rounded),
           ),
           IconButton(

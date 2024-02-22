@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teraflex_mobile/features/auth/domain/entities/user/user.dart';
 import 'package:teraflex_mobile/features/auth/ui/blocs/auth/auth_cubit.dart';
 import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
+import 'package:teraflex_mobile/features/treatments/ui/widgets/treatment_tasks/custom_task_filters.dart';
 import 'package:teraflex_mobile/utils/date_util.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 
@@ -179,15 +181,19 @@ class ProfileView extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text("Noti ::: ${notificationState.status.name}"),
-                            TextButton(
-                              onPressed: () {
-                                context
-                                    .read<NotificationsCubit>()
-                                    .requestPermissions();
-                              },
-                              child: const Text('Habilitar'),
-                            )
+                            // crear checkbox para habilitar o deshabilitar notificaciones
+                            const SizedBox(height: 10),
+                            CustomSwitch(
+                              disabled: notificationState.globalStatus ==
+                                  StatusUtil.loading,
+                              title:
+                                  "${notificationState.status.name} : ${notificationState.globalStatus.name}",
+                              value: notificationState.status ==
+                                  AuthorizationStatus.authorized,
+                              onChanged: context
+                                  .read<NotificationsCubit>()
+                                  .statusChange,
+                            ),
                           ],
                         ),
                       ),

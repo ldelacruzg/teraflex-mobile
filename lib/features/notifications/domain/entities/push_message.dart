@@ -10,6 +10,6 @@ class PushMessage {
     required this.title,
     required this.body,
     required this.sendDate,
-    required this.data,
+    this.data,
   });
 }

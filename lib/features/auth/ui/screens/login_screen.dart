@@ -7,6 +7,7 @@ import 'package:teraflex_mobile/features/auth/infrastructure/datasources/tfx_log
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_local_storage_repository_impl.dart';
 import 'package:teraflex_mobile/features/auth/infrastructure/repositories/login_repository_impl.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
+import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String name = 'login_screen';
@@ -87,6 +88,12 @@ class _LoginFormState extends State<LoginForm> {
         // ignore: invalid_return_type_for_catch_error
         .catchError((e) => _showMessageError(e.toString()))
         .whenComplete(() => _setLoading(false));
+
+    _initialStatusNotifications();
+  }
+
+  void _initialStatusNotifications() {
+    context.read<NotificationsCubit>().initialStatusNotification();
   }
 
   void _handleLoginSuccess(LoginToken token) async {
