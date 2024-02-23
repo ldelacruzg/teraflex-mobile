@@ -19,7 +19,23 @@ class AppThemeState extends Equatable {
   ThemeState get currentThemeState => themeState;
 
   ThemeData get currentTheme =>
-      themeState == ThemeState.light ? ThemeData.light() : ThemeData.dark();
+      themeState == ThemeState.light ? _getThemeLight() : _getThemeDark();
+
+  ThemeData _getThemeLight() {
+    // retornar el tema light en base al siguiente color #007bbd
+    return ThemeData(
+      colorSchemeSeed: const Color(0xFF007bbd),
+      brightness: Brightness.light,
+    );
+  }
+
+  ThemeData _getThemeDark() {
+    // retornar el tema dark en base al siguiente color #007bbd
+    return ThemeData(
+      colorSchemeSeed: const Color(0xFF007bbd),
+      brightness: Brightness.dark,
+    );
+  }
 
   AppThemeState copyWith({
     ThemeState? themeState,
