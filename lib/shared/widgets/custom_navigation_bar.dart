@@ -31,6 +31,11 @@ class CustomNavigationBar extends StatelessWidget {
           label: 'Clasificación',
           selectedIcon: Icon(Icons.leaderboard_rounded),
         ),
+        NavigationDestination(
+          icon: Icon(Icons.shopping_bag_outlined),
+          label: 'Tienda',
+          selectedIcon: Icon(Icons.shopping_bag),
+        ),
       ],
     );
   }
