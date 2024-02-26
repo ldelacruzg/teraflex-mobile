@@ -17,6 +17,7 @@ import 'package:teraflex_mobile/features/leaderboard/infrastructure/repositories
 import 'package:teraflex_mobile/features/leaderboard/ui/blocs/current_week_leaderboard/current_week_leaderboard_cubit.dart';
 import 'package:teraflex_mobile/features/notifications/ui/blocs/notifications/notifications_cubit.dart';
 import 'package:teraflex_mobile/features/settings/ui/blocs/profile_form/profile_form_cubit.dart';
+import 'package:teraflex_mobile/features/store/ui/blocs/redeem_product/redeem_product_cubit.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/datasources/tfx_task_datasource.dart';
 import 'package:teraflex_mobile/features/tasks/infrastructure/repositories/task_repository_impl.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/multimedia_list/multimedia_list_cubit.dart';
@@ -109,6 +110,11 @@ class MainApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (context) => ProfileFormCubit()),
+        BlocProvider(
+          create: (context) => RedeemProductCubit(
+            localStorageRepository: localStorageRepository,
+          ),
+        ),
       ],
       child: const AppView(),
     );
