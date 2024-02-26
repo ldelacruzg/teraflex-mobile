@@ -52,4 +52,12 @@ class GlobalSummaryCubit extends Cubit<GlobalSummaryState> {
       ));
     }
   }
+
+  void decreaseFlexicoins(int amount) {
+    final newGlobalSummary = state.globalSummary.copyWith(
+      flexicoins: state.globalSummary.flexicoins - amount,
+    );
+
+    emit(state.copyWith(globalSummary: newGlobalSummary));
+  }
 }

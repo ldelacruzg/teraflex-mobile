@@ -18,4 +18,26 @@ class GlobalSummary {
     required this.qtyTasksHistory,
     required this.qtyTasksCompletedWeekly,
   });
+
+  GlobalSummary copyWith({
+    int? flexicoins,
+    int? experience,
+    Rank? rank,
+    int? qtyTasksCompletedHistory,
+    int? qtyTasksWeekly,
+    int? qtyTasksHistory,
+    int? qtyTasksCompletedWeekly,
+  }) {
+    return GlobalSummary(
+      flexicoins: flexicoins ?? this.flexicoins,
+      experience: experience ?? this.experience,
+      rank: rank ?? this.rank,
+      qtyTasksCompletedHistory:
+          qtyTasksCompletedHistory ?? this.qtyTasksCompletedHistory,
+      qtyTasksWeekly: qtyTasksWeekly ?? this.qtyTasksWeekly,
+      qtyTasksHistory: qtyTasksHistory ?? this.qtyTasksHistory,
+      qtyTasksCompletedWeekly:
+          qtyTasksCompletedWeekly ?? this.qtyTasksCompletedWeekly,
+    );
+  }
 }
