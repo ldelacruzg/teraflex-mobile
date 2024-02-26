@@ -15,4 +15,10 @@ class Environment {
   static double accuracyRankSame = dotenv.env['ACCURACY_RANK_SAME'] != null
       ? double.parse(dotenv.env['ACCURACY_RANK_SAME']!)
       : 0.7;
+
+  // ignore: non_constant_identifier_names
+  static int STORE_FREE_APPOINTMENT_FXC =
+      dotenv.env['STORE_FREE_APPOINTMENT_FXC'] != null
+          ? int.parse(dotenv.env['STORE_FREE_APPOINTMENT_FXC']!)
+          : 100;
 }

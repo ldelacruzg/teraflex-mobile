@@ -27,7 +27,7 @@ class RedeemProductCubit extends Cubit<RedeemProductState> {
       if (patientId == null) {
         emit(state.copyWith(
           status: StatusUtil.error,
-          statusMessage: 'No se pudo obtener el id del paciente',
+          statusMessage: 'Posiblemente no has iniciado sesión',
         ));
         return null;
       }

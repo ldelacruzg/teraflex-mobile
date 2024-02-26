@@ -1,49 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/config/constants/environment.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
 import 'package:teraflex_mobile/features/store/ui/blocs/redeem_product/redeem_product_cubit.dart';
 import 'package:teraflex_mobile/shared/widgets/custom_confirm_dialog.dart';
+import 'package:teraflex_mobile/utils/status_util.dart';
 
 class StoreView extends StatelessWidget {
   const StoreView({super.key});
 
   void _confirmPurchase(BuildContext context) {
-    //final state = context.read<RedeemProductCubit>().state;
-
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {
         return CustomConfirmDialog(
           title: 'Generar código promocional',
-          content: const Column(
-            children: [
-              Text(
-                  'Para mayor seguridad te recomendamos que generes el código en presencia de tu terapeuta.'),
-              SizedBox(height: 10),
-              /*Visibility(
-                visible: status == StatusUtil.loading,
-                child: const LinearProgressIndicator(),
-              ),*/
-            ],
-          ),
+          content: const Text(
+              'Para mayor seguridad te recomendamos que generes el código en presencia de tu terapeuta.'),
           onCancel: () => context.pop(false),
           onConfirm: () => context.pop(true),
         );
       },
-    ).then((value) {
-      if (!value) return;
-      context.read<RedeemProductCubit>().redeemProduct().then((value) {
-        /*print('paso 1');
-        if (value == null) {
-          print('paso 4');
-          _showDialogError(context, "state.statusMessage!");
-          return;
-        }
-        print('paso 2');
-        _showDialogSuccess(context, value.code);*/
-      });
+    ).then((value) => _responseConfirmPurchase(context, value));
+  }
+
+  void _responseConfirmPurchase(BuildContext context, bool value) {
+    if (!value) return;
+    context.read<RedeemProductCubit>().redeemProduct().then((value) {
+      if (value == null) {
+        _showDialogError(context);
+        return;
+      }
+
+      context
+          .read<GlobalSummaryCubit>()
+          .decreaseFlexicoins(Environment.STORE_FREE_APPOINTMENT_FXC);
+      _showDialogSuccess(context, value.code);
     });
   }
 
@@ -97,7 +91,8 @@ class StoreView extends StatelessWidget {
     );
   }
 
-  void _showDialogError(BuildContext context, String message) {
+  void _showDialogError(BuildContext context) {
+    final message = context.read<RedeemProductCubit>().state.statusMessage;
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -105,6 +100,7 @@ class StoreView extends StatelessWidget {
         return AlertDialog(
           content: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Error al generar el código promocional',
@@ -114,8 +110,9 @@ class StoreView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(message),
+                      Text(message ?? 'Ocurrió un error inesperado'),
                     ],
                   ),
                 ),
@@ -149,14 +146,23 @@ class StoreView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorSchema = Theme.of(context).colorScheme;
-    final myFlexicoins =
-        context.watch<GlobalSummaryCubit>().state.globalSummary.flexicoins;
+    final globalSummaryState = context.watch<GlobalSummaryCubit>().state;
+    final redeemProductState = context.watch<RedeemProductCubit>().state;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Visibility(
+            visible: redeemProductState.status == StatusUtil.loading,
+            child: const Column(
+              children: [
+                LinearProgressIndicator(),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
           const Text(
             'Código promocional',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -167,7 +173,8 @@ class StoreView extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    if (myFlexicoins < 50) {
+                    if (globalSummaryState.globalSummary.flexicoins <
+                        Environment.STORE_FREE_APPOINTMENT_FXC) {
                       _showSnackBar(
                         context,
                         'No tienes suficientes flexicoins para obtener el código.',
@@ -207,11 +214,13 @@ class StoreView extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      '100',
+                                      Environment.STORE_FREE_APPOINTMENT_FXC
+                                          .toString(),
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: colorSchema.primary),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: colorSchema.primary,
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -14,15 +14,14 @@ class TfxStoreDatasource extends StoreDatasource {
     try {
       response = await dio.post('/patients/$patientId/redeem');
     } on DioException catch (e) {
-      print('error dio');
       throw Exception(e.response?.data['message'] ?? e.message);
     } catch (e) {
-      print('error normal');
       throw Exception("Error desconcido");
     }
 
-    final data = TfxRedeemProductDataModel.fromJson(response.data);
-    final redeemProduct = RedeemProductMapper.fromTfxRedeemProductData(data);
+    final data = TfxRedeemProductModel.fromJson(response.data);
+    final redeemProduct =
+        RedeemProductMapper.fromTfxRedeemProductData(data.data);
 
     return redeemProduct;
   }

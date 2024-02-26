@@ -20,8 +20,10 @@ class CustomConfirmDialog extends StatelessWidget {
       //title: Text(title),
       content: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
