@@ -6,6 +6,7 @@ import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assi
 import 'package:teraflex_mobile/features/treatments/ui/widgets/treatment_tasks/custom_task_filters.dart';
 import 'package:teraflex_mobile/features/treatments/ui/widgets/treatment_tasks/custom_treatment_bottom_sheet.dart';
 import 'package:teraflex_mobile/features/treatments/ui/widgets/treatment_tasks/info_item.dart';
+import 'package:teraflex_mobile/utils/date_util.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 import 'package:teraflex_mobile/utils/time_util.dart';
 
@@ -90,22 +91,24 @@ class ListTaskItem extends StatelessWidget {
 
   String get status {
     if (assignment.task.performancedDate != null) {
-      return 'Completada';
-    }
-    
-    final now = DateTime.now();
-    if (assignment.task.expirationDate.isBefore(DateTime(now.year, now.month, now.day))) {
-      return 'Vencida';
+      return 'Completada el ${DateUtil.getShortDate(assignment.task.performancedDate!)}';
     }
 
-    return 'Pendiente';
+    final now = DateTime.now();
+    if (assignment.task.expirationDate
+        .isBefore(DateTime(now.year, now.month, now.day))) {
+      return 'Vencida el ${DateUtil.getShortDate(assignment.task.expirationDate)}';
+    }
+
+    return 'Pendiente hasta el ${DateUtil.getShortDate(assignment.task.expirationDate)}';
   }
 
   bool get enabled {
     final now = DateTime.now();
     final currentDate = DateTime(now.year, now.month, now.day);
     return assignment.task.performancedDate == null &&
-        (currentDate.isBefore(assignment.task.expirationDate) || currentDate.isAtSameMomentAs(assignment.task.expirationDate));
+        (currentDate.isBefore(assignment.task.expirationDate) ||
+            currentDate.isAtSameMomentAs(assignment.task.expirationDate));
   }
 
   @override
