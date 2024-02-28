@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/auth/ui/screens/login_screen.dart';
 import 'package:teraflex_mobile/features/home/ui/screens/home_screen.dart';
 import 'package:teraflex_mobile/features/notifications/ui/screens/notifications_screen.dart';
+import 'package:teraflex_mobile/features/settings/ui/screens/about/about_screen.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/profile/profile_view.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/security/change_password_screen.dart';
 import 'package:teraflex_mobile/features/settings/ui/screens/security/security_view.dart';
@@ -78,6 +79,11 @@ final appRouter = GoRouter(
           path: 'profile',
           name: ProfileScreen.name,
           builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: 'about',
+          name: AboutScreen.name,
+          builder: (context, state) => const AboutScreen(),
         ),
         GoRoute(
           path: 'security',
