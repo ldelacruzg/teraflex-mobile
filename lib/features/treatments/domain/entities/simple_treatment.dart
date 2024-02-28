@@ -3,6 +3,7 @@ class SimpleTreatment {
   final String title;
   final int numberTasks;
   final int completedTasks;
+  final int overdueTasks;
   final int pendingTasks;
 
   SimpleTreatment({
@@ -10,6 +11,7 @@ class SimpleTreatment {
     required this.title,
     required this.numberTasks,
     required this.completedTasks,
+    required this.overdueTasks,
     required this.pendingTasks,
   });
 
@@ -19,6 +21,7 @@ class SimpleTreatment {
       'title': title,
       'numberTasks': numberTasks,
       'completedTasks': completedTasks,
+      'overdueTasks': overdueTasks,
       'pendingTasks': pendingTasks,
     };
   }

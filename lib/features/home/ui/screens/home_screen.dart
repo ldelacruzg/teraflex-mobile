@@ -90,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context.push('/notifications');
             },
             icon: Badge(
+              isLabelVisible: lenNotification > 0,
               label: Text('$lenNotification'),
               child: const Icon(Icons.notifications_rounded),
             ),

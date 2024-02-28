@@ -28,6 +28,7 @@ class Data {
   String title;
   int numberTasks;
   int completedTasks;
+  int overdueTasks;
   int pendingTasks;
 
   Data({
@@ -35,6 +36,7 @@ class Data {
     required this.title,
     required this.numberTasks,
     required this.completedTasks,
+    required this.overdueTasks,
     required this.pendingTasks,
   });
 
@@ -43,6 +45,7 @@ class Data {
         title: json["title"],
         numberTasks: json["numberTasks"],
         completedTasks: json["completedTasks"],
+        overdueTasks: json["overdueTasks"],
         pendingTasks: json["pendingTasks"],
       );
 
@@ -51,6 +54,7 @@ class Data {
         "title": title,
         "numberTasks": numberTasks,
         "completedTasks": completedTasks,
+        "overdueTasks": overdueTasks,
         "pendingTasks": pendingTasks,
       };
 }

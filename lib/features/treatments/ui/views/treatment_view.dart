@@ -65,15 +65,36 @@ class ListTreatmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ListTile(
-      title: Text(
-        treatment.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
+      title: Badge(
+        isLabelVisible: treatment.pendingTasks > 0,
+        backgroundColor: colorScheme.primary,
+        label: Text('${treatment.pendingTasks}'),
+        child: Text(
+          treatment.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      subtitle:
-          Text('Tareas: ${treatment.completedTasks}/${treatment.numberTasks}'),
+      subtitle: Wrap(
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.start,
+        spacing: 4.0,
+        runSpacing: 4.0,
+        children: [
+          SpanInfo(
+            value: 'Completadas: ${treatment.completedTasks}',
+            color: Colors.greenAccent,
+          ),
+          SpanInfo(
+            value: 'Vencidas: ${treatment.overdueTasks}',
+            color: Colors.redAccent,
+          )
+        ],
+      ),
       leading: const CircleAvatar(child: Icon(Icons.fitness_center_rounded)),
       trailing: const Icon(Icons.arrow_forward_rounded),
       onTap: () {
@@ -86,5 +107,34 @@ class ListTreatmentItem extends StatelessWidget {
         context.push('/home/treatments/${treatment.id}');
       },
     );
+  }
+}
+
+class SpanInfo extends StatelessWidget {
+  final String value;
+  final Color color;
+
+  const SpanInfo({
+    super.key,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: color,
+        ),
+        child: Text(
+          value,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ));
   }
 }

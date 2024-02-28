@@ -14,6 +14,7 @@ class TreatmentMapper {
         title: treatment.title,
         numberTasks: treatment.numberTasks,
         completedTasks: treatment.completedTasks,
+        overdueTasks: treatment.overdueTasks,
         pendingTasks: treatment.pendingTasks,
       );
     }).toList();
