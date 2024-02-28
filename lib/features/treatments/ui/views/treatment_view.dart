@@ -5,6 +5,7 @@ import 'package:teraflex_mobile/features/treatments/domain/entities/simple_treat
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
+import 'package:teraflex_mobile/shared/widgets/span_info.dart';
 
 class TreatmentView extends StatelessWidget {
   const TreatmentView({super.key});
@@ -107,34 +108,5 @@ class ListTreatmentItem extends StatelessWidget {
         context.push('/home/treatments/${treatment.id}');
       },
     );
-  }
-}
-
-class SpanInfo extends StatelessWidget {
-  final String value;
-  final Color color;
-
-  const SpanInfo({
-    super.key,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: color,
-        ),
-        child: Text(
-          value,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-        ));
   }
 }
