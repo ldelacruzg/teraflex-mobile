@@ -5,6 +5,7 @@ import 'package:teraflex_mobile/features/treatments/domain/entities/simple_treat
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/treatment_detail/treatment_detail_cubit.dart';
+import 'package:teraflex_mobile/shared/widgets/connection_issues.dart';
 import 'package:teraflex_mobile/shared/widgets/span_info.dart';
 
 class TreatmentView extends StatelessWidget {
@@ -19,9 +20,7 @@ class TreatmentView extends StatelessWidget {
     }
 
     if (state.status == Status.error) {
-      return Center(
-        child: Text(state.statusMessage ?? 'Error al cargar los tratamientos'),
-      );
+      return const ConnectionIssues();
     }
 
     if (state.status == Status.notLogged) {

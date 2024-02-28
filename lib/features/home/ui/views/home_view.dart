@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teraflex_mobile/features/home/ui/blocs/global_summary/global_summary_cubit.dart';
+import 'package:teraflex_mobile/shared/widgets/connection_issues.dart';
 import 'package:teraflex_mobile/utils/date_util.dart';
 import 'package:teraflex_mobile/utils/rank.enum.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
@@ -52,9 +53,7 @@ class HomeView extends StatelessWidget {
     }
 
     if (state.status == StatusUtil.error) {
-      return Center(
-        child: Text(state.statusMessage ?? 'Error desconocido'),
-      );
+      return const ConnectionIssues();
     }
 
     return SingleChildScrollView(
