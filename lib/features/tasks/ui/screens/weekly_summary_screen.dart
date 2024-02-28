@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/tasks/domain/entities/weekly_summary.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/weekly_summary/weekly_summary_cubit.dart';
+import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 
 class WeeklySummaryScreen extends StatefulWidget {
@@ -117,6 +118,9 @@ class WeeklySummaryView extends StatelessWidget {
               Expanded(
                 child: FilledButton(
                   onPressed: () {
+                    context
+                        .read<SimpleTreatmentListCubit>()
+                        .loadSimpleTreatments();
                     context.go('/home');
                   },
                   child: const Text('CONTINUAR'),
