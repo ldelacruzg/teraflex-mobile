@@ -240,36 +240,47 @@ class LeaderboardItem extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Row(
-            children: [
-              Text(
-                '# $position',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 10),
-              const CircleAvatar(child: Icon(Icons.person_2_rounded)),
-            ],
+          const CircleAvatar(child: Icon(Icons.person_2_rounded)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis),
           ),
           const SizedBox(width: 10),
-          Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-          const Spacer(),
-          Container(
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Row(
-              children: [
-                Icon(icon, color: Colors.black),
-                Text(
-                  '${accuracy * 100} %',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+          SpanRate(color: color, icon: icon, accuracy: accuracy),
+        ],
+      ),
+    );
+  }
+}
+
+class SpanRate extends StatelessWidget {
+  const SpanRate({
+    super.key,
+    required this.color,
+    required this.icon,
+    required this.accuracy,
+  });
+
+  final Color color;
+  final IconData icon;
+  final double accuracy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(50),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.black),
+          Text(
+            '${accuracy * 100} %',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
         ],
