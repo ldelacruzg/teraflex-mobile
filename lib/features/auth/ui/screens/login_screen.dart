@@ -86,7 +86,8 @@ class _LoginFormState extends State<LoginForm> {
         )
         .then((token) => _handleLoginSuccess(token))
         // ignore: invalid_return_type_for_catch_error
-        .catchError((e) => _showMessageError(e.toString()))
+        .catchError((e) =>
+            _showMessageError(e.toString().replaceFirst('Exception: ', '')))
         .whenComplete(() => _setLoading(false));
 
     _initialStatusNotifications();
