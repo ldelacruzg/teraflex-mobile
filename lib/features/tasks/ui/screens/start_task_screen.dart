@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/task_execution/task_execution_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/assigned_tasks/assigned_tasks_cubit.dart';
@@ -26,8 +27,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   void initState() {
+    WakelockPlus.enable();
     initialize();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
   }
 
   void initialize() {
