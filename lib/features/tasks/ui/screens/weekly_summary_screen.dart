@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/features/tasks/domain/entities/weekly_summary.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/weekly_summary/weekly_summary_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/ui/blocs/simple_treatment_list/simple_treatment_list_cubit.dart';
+import 'package:teraflex_mobile/shared/data/local_messages.dart';
+import 'package:teraflex_mobile/utils/random_util.dart';
 import 'package:teraflex_mobile/utils/status_util.dart';
 
 class WeeklySummaryScreen extends StatefulWidget {
@@ -18,9 +20,14 @@ class WeeklySummaryScreen extends StatefulWidget {
 }
 
 class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
+  final PageController pageController = PageController();
+  late final String message;
+
   @override
   void initState() {
     super.initState();
+    message = motivationalMessages[
+        RandomUtil.getRandomIntBetween(0, motivationalMessages.length - 1)];
 
     context
         .read<WeeklySummaryCubit>()
@@ -53,8 +60,69 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
         title: null,
         automaticallyImplyLeading: false,
       ),
-      body: WeeklySummaryView(
-        weeklySummary: state.weeklySummary,
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView(
+              controller: pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // message
+                      Column(
+                        children: [
+                          Text(
+                            'Felicidades, ¡Buen trabajo!',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          Text(
+                            message,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // image
+                      Image.asset('assets/images/welcome_messages/3.png'),
+
+                      // button
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: () {
+                                pageController.nextPage(
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.easeIn,
+                                );
+                              },
+                              child: const Text('CONTINUAR'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                WeeklySummaryView(
+                  weeklySummary: state.weeklySummary,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -150,6 +218,8 @@ class CardInfoSummary extends StatelessWidget {
     this.svg,
   });
 
+  double get percentage => (value / total).isNaN ? 0 : (value / total);
+
   @override
   Widget build(BuildContext context) {
     final colorSchema = Theme.of(context).colorScheme;
@@ -190,7 +260,7 @@ class CardInfoSummary extends StatelessWidget {
           ),
         ),
         subtitle: LinearProgressIndicator(
-          value: value / total,
+          value: percentage,
           minHeight: 15,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),

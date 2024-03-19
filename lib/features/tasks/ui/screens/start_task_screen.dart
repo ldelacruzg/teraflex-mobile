@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teraflex_mobile/shared/data/local_messages.dart';
+import 'package:teraflex_mobile/utils/random_util.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:teraflex_mobile/features/tasks/ui/blocs/task_execution/task_execution_cubit.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
@@ -94,6 +96,41 @@ class StartTaskView extends StatelessWidget {
     required this.assignmentId,
   });
 
+  void Function()? finishTask(BuildContext context, ExecutionStatus status) {
+    if (status != ExecutionStatus.finished) return null;
+    return () {
+      _showConfirmDialog(context);
+    };
+  }
+
+  void _showConfirmDialog(BuildContext context) {
+    final idxMessage =
+        RandomUtil.getRandomIntBetween(0, completionConfirmMessages.length - 1);
+    showDialog<bool>(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return CustomConfirmDialog(
+          title: completionConfirmMessages[idxMessage],
+          content: const Text(
+              'Ten en cuenta que esta tarea es fundamental para tu recuperación. Si no estás seguro de haber completado la tarea, te recomendamos que la finalices más tarde. ¿Estás seguro de que deseas finalizar la tarea?'),
+          onCancel: () => context.pop(false),
+          onConfirm: () => context.pop(true),
+          textConfirm: "Si, finalizar",
+          textCancel: "No",
+        );
+      },
+    ).then((value) {
+      // si finzaliza -> ir a la pantalla de finalización
+      if (value != null && value) {
+        context.go('/home/treatments/0/assignments/$assignmentId/finish');
+      } else {
+        // si no finaliza -> ir a la pantalla de la tarea
+        context.go('/home');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<TaskExecutionCubit>().state;
@@ -179,12 +216,7 @@ class StartTaskView extends StatelessWidget {
           bottom: 20,
           right: 16,
           child: FilledButton(
-            onPressed: state.status == ExecutionStatus.finished
-                ? () {
-                    context.go(
-                        '/home/treatments/0/assignments/$assignmentId/finish');
-                  }
-                : null,
+            onPressed: finishTask(context, state.status),
             child: const Text('FINALIZAR'),
           ),
         ),

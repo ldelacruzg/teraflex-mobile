@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class CustomConfirmDialog extends StatelessWidget {
   final void Function()? onConfirm;
   final void Function()? onCancel;
+  final String textConfirm;
+  final String textCancel;
   final String title;
   final Widget content;
 
@@ -12,6 +14,8 @@ class CustomConfirmDialog extends StatelessWidget {
     this.onCancel,
     required this.title,
     required this.content,
+    this.textConfirm = 'Aceptar',
+    this.textCancel = 'Cancelar',
   });
 
   @override
@@ -43,11 +47,11 @@ class CustomConfirmDialog extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: onCancel,
-                  child: const Text('Cancelar'),
+                  child: Text(textCancel),
                 ),
                 TextButton(
                   onPressed: onConfirm,
-                  child: const Text('Aceptar'),
+                  child: Text(textConfirm),
                 ),
               ],
             ),
