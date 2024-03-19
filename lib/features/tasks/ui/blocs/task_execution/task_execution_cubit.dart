@@ -1,11 +1,16 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:teraflex_mobile/features/treatments/domain/entities/treatment_task.dart';
 import 'package:teraflex_mobile/utils/time_util.dart';
 
 part 'task_execution_state.dart';
 
 class TaskExecutionCubit extends Cubit<TaskExecutionState> {
+  final player = AudioPlayer();
+  final tts = FlutterTts();
+
   TaskExecutionCubit() : super(const TaskExecutionState());
 
   void init(TaskConfig taskConfig) {
@@ -23,9 +28,16 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       restingDuration: TimeUtil.getDuration(taskConfig.breakTime),
       executions: executions,
     ));
+
+    tts.setLanguage('es-ES');
+    tts.setSpeechRate(0.5);
+    tts.setVolume(1.0);
+    tts.setPitch(1.0);
   }
 
   void start() {
+    audioPlay('repetition');
+    speak('Serie 1, Repetición 1');
     emit(state.copyWith(
       status: ExecutionStatus.running,
       currentRepetition: 1,
@@ -50,6 +62,9 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
     int newRepetition = state.currentRepetition + 1;
 
     if (isTaskCompleted(series: newSerie, repetitions: newRepetition)) {
+      // finaliza la tarea
+      audioPlay('end');
+      speak('Tarea finalizada');
       return emit(state.copyWith(
         status: ExecutionStatus.finished,
         currentSeries: 0,
@@ -66,6 +81,8 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
             config.breakTime > 0 && // hay descanso entre series
             state.status != ExecutionStatus.resting // no esta en descanso
         ) {
+      audioPlay('break');
+      speak('Tiempo de descanso');
       return emit(state.copyWith(
         status: ExecutionStatus.resting,
         executions: state.changeStatusRepetition(
@@ -85,6 +102,9 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
 
     // la repetición se reinicia cuando llega a su limite y hay más de una serie
     if (newRepetition > config.repetitions && config.series > 1) {
+      // nueva serie
+      audioPlay('repetition');
+      speak('Serie $newSerie, Repetición 1');
       return emit(state.copyWith(
         currentSeries: newSerie,
         currentRepetition: 1,
@@ -93,9 +113,20 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       ));
     }
 
+    // nueva repetición
+    audioPlay('repetition');
+    speak('Serie ${state.currentSeries}, Repetición $newRepetition');
     emit(state.copyWith(
       currentRepetition: newRepetition,
       executions: state.changeStatusRepetition(status: TimerState.done),
     ));
+  }
+
+  void audioPlay(String sound) async {
+    await player.play(AssetSource('sounds/$sound-task.mp3'));
+  }
+
+  void speak(String text) async {
+    await tts.speak(text);
   }
 }

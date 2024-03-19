@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teraflex_mobile/shared/widgets/custom_confirm_dialog.dart';
 
@@ -28,6 +30,8 @@ class _CustomTimerState extends State<CustomTimer> {
   Duration _countdown = const Duration(seconds: 5);
   bool _isRunning = false;
   bool _isCountdown = false;
+  final player = AudioPlayer();
+  final tts = FlutterTts();
 
   @override
   void initState() {
@@ -58,7 +62,7 @@ class _CustomTimerState extends State<CustomTimer> {
     });
   }
 
-  void _startCountdown() {
+  void _startCountdown() async {
     _isCountdown = true;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_countdown.inSeconds == 0) {
@@ -72,6 +76,9 @@ class _CustomTimerState extends State<CustomTimer> {
         });
       }
     });
+
+    await player.play(AssetSource('sounds/start-task.mp3'));
+    await tts.speak('Comenzamos en 5 segundos');
   }
 
   @override
