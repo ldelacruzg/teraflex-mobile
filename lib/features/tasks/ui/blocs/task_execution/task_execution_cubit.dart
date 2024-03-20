@@ -43,6 +43,7 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       currentRepetition: 1,
       currentSeries: 1,
     ));
+    setNextStatus();
   }
 
   bool isTaskCompleted({required int series, required int repetitions}) {
@@ -50,9 +51,10 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
     return series > config.series && repetitions > config.repetitions;
   }
 
-  bool isSerieCompleted({required int repetitions}) {
+  bool isLastSerieAndRepetition(
+      {required int series, required int repetitions}) {
     final config = state.taskConfig!;
-    return repetitions > config.repetitions;
+    return series == config.series && repetitions == config.repetitions;
   }
 
   void nextTimer() {
@@ -83,12 +85,13 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
         ) {
       audioPlay('break');
       speak('Tiempo de descanso');
-      return emit(state.copyWith(
+      emit(state.copyWith(
         status: ExecutionStatus.resting,
         executions: state.changeStatusRepetition(
           status: TimerState.done,
         ),
       ));
+      return setNextStatus();
     }
 
     // 2. puede haber descanso entre repeticiones cuando haya una SOLA serie
@@ -105,12 +108,13 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       // nueva serie
       audioPlay('repetition');
       speak('Serie $newSerie, Repetición 1');
-      return emit(state.copyWith(
+      emit(state.copyWith(
         currentSeries: newSerie,
         currentRepetition: 1,
         executions:
             state.changeSerieAndRepetitionStatus(status: TimerState.done),
       ));
+      return setNextStatus();
     }
 
     // nueva repetición
@@ -120,6 +124,51 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       currentRepetition: newRepetition,
       executions: state.changeStatusRepetition(status: TimerState.done),
     ));
+
+    // verificar si es la última serie y repetición
+    if (isLastSerieAndRepetition(
+      series: state.currentSeries,
+      repetitions: newRepetition,
+    )) {
+      emit(state.copyWith(
+        isLastSerieRepetition: true,
+      ));
+    }
+
+    setNextStatus();
+  }
+
+  void setNextStatus() {
+    final config = state.taskConfig!;
+    // finalizar
+    if (isLastSerieAndRepetition(
+      series: state.currentSeries,
+      repetitions: state.currentRepetition,
+    )) {
+      return emit(state.copyWith(
+        nextStatus: ExecutionStatus.finished,
+      ));
+    }
+
+    // running
+    // es running cuando esta en descanso o series y repetición sean diferente al último
+    if (state.status == ExecutionStatus.resting ||
+        (state.currentSeries < config.series &&
+            state.currentRepetition < config.repetitions)) {
+      return emit(state.copyWith(
+        nextStatus: ExecutionStatus.running,
+      ));
+    }
+
+    // descanso
+    // verificar si es la ultima repetición, si hay descanso y no es la ultima serie
+    if (state.currentRepetition == config.repetitions &&
+        config.breakTime > 0 &&
+        state.currentSeries < config.series) {
+      return emit(state.copyWith(
+        nextStatus: ExecutionStatus.resting,
+      ));
+    }
   }
 
   void audioPlay(String sound) async {

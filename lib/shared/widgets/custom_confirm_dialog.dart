@@ -45,10 +45,12 @@ class CustomConfirmDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  onPressed: onCancel,
-                  child: Text(textCancel),
-                ),
+                onCancel == null
+                    ? const SizedBox()
+                    : TextButton(
+                        onPressed: onCancel,
+                        child: Text(textCancel),
+                      ),
                 TextButton(
                   onPressed: onConfirm,
                   child: Text(textConfirm),

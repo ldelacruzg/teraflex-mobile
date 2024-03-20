@@ -37,3 +37,21 @@ List<String> motivationalMessages = [
   "No te desanimes por los contratiempos. Cada esfuerzo te acerca un paso más hacia tu recuperación.",
   "Recuerda que cada día es una nueva oportunidad para mejorar. ¡Mantén una actitud positiva!",
 ];
+
+List<String> nextRepetitionMessages = [
+  "¡Excelente esfuerzo! ¿Estás listo para la siguiente repetición?",
+  "Genial trabajo, ¡sigamos con la próxima repetición!",
+  "¡Muy bien hecho! Ahora vamos con la siguiente repetición.",
+  "¡Fantástico! ¿Listo para la siguiente repetición?",
+  "¡Estupendo trabajo! Preparado para la próxima repetición.",
+  "¡Bravo! Ahora, ¿listo para la siguiente repetición?",
+  "¡Increíble esfuerzo! ¿Estás preparado para la siguiente repetición?",
+  "¡Magnífico! Sigamos con la próxima repetición.",
+  "¡Impresionante trabajo! ¿Listo para la siguiente repetición?",
+  "¡Fantástico! Continuemos con la siguiente repetición.",
+  "¡Maravilloso esfuerzo! ¿Estás listo para la siguiente repetición?",
+  "¡Espectacular trabajo! Ahora vamos con la siguiente repetición.",
+  "¡Increíble! ¿Preparado para la siguiente repetición?",
+  "¡Brillante! Sigamos con la próxima repetición.",
+  "¡Genial! ¿Listo para la siguiente repetición?",
+];

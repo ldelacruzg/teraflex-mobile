@@ -61,6 +61,8 @@ class TaskExecutionState extends Equatable {
   final Duration restingDuration;
   final ExecutionStatus status;
   final List<Serie> executions;
+  final bool isLastSerieRepetition;
+  final ExecutionStatus nextStatus;
 
   const TaskExecutionState({
     this.taskConfig,
@@ -70,6 +72,8 @@ class TaskExecutionState extends Equatable {
     this.restingDuration = const Duration(seconds: 0),
     this.status = ExecutionStatus.initial,
     this.executions = const [],
+    this.isLastSerieRepetition = false,
+    this.nextStatus = ExecutionStatus.initial,
   });
 
   TaskExecutionState copyWith({
@@ -80,6 +84,8 @@ class TaskExecutionState extends Equatable {
     Duration? restingDuration,
     ExecutionStatus? status,
     List<Serie>? executions,
+    bool? isLastSerieRepetition,
+    ExecutionStatus? nextStatus,
   }) {
     return TaskExecutionState(
       taskConfig: taskConfig ?? this.taskConfig,
@@ -89,6 +95,9 @@ class TaskExecutionState extends Equatable {
       restingDuration: restingDuration ?? this.restingDuration,
       status: status ?? this.status,
       executions: executions ?? this.executions,
+      isLastSerieRepetition:
+          isLastSerieRepetition ?? this.isLastSerieRepetition,
+      nextStatus: nextStatus ?? this.nextStatus,
     );
   }
 
@@ -149,5 +158,7 @@ class TaskExecutionState extends Equatable {
         restingDuration,
         status,
         executions,
+        isLastSerieRepetition,
+        nextStatus,
       ];
 }
