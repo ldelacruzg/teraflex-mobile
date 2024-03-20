@@ -131,27 +131,6 @@ class StartTaskView extends StatelessWidget {
     });
   }
 
-  void _showConfirmDialogNextTimer(BuildContext context) {
-    showDialog<bool>(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return CustomConfirmDialog(
-          title: '¿Estás listo para la siguiente repetición?',
-          content: const Text(
-              'Continua con la repetición cuando estés listo. Trata de mantener un ritmo constante y no te excedas.'),
-          onCancel: () => context.pop(false),
-          onConfirm: () => context.pop(true),
-        );
-      },
-    ).then((value) {
-      if (value != null && value) {
-        print('continuar con la siguiente repetición');
-        //context.read<TaskExecutionCubit>().nextTimer();
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = context.watch<TaskExecutionCubit>().state;
