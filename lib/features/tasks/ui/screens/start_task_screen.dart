@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:teraflex_mobile/shared/data/local_messages.dart';
 import 'package:teraflex_mobile/utils/random_util.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -343,6 +344,27 @@ class TimerRepeat extends StatelessWidget {
     return state == TimerState.pending ? Colors.grey : null;
   }
 
+  Widget buildIcon() {
+    if (state == TimerState.current) {
+      return SpinPerfect(
+        infinite: true,
+        child: CircleAvatar(
+          child: Icon(
+            getIcon(),
+            color: getColor(),
+          ),
+        ),
+      );
+    }
+
+    return CircleAvatar(
+      child: Icon(
+        getIcon(),
+        color: getColor(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -351,10 +373,7 @@ class TimerRepeat extends StatelessWidget {
         style: TextStyle(color: getColor()),
       ),
       trailing: CircleAvatar(
-        child: Icon(
-          getIcon(),
-          color: getColor(),
-        ),
+        child: buildIcon(),
       ),
     );
   }
