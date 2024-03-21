@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:teraflex_mobile/shared/data/local_messages.dart';
@@ -89,8 +90,9 @@ class StartTaskView extends StatelessWidget {
   final TaskConfig taskConfig;
   final String taskTitle;
   final String assignmentId;
+  final tts = FlutterTts();
 
-  const StartTaskView({
+  StartTaskView({
     super.key,
     required this.taskConfig,
     required this.taskTitle,
@@ -98,7 +100,7 @@ class StartTaskView extends StatelessWidget {
   });
 
   void Function()? finishTask(BuildContext context, ExecutionStatus status) {
-    if (status != ExecutionStatus.finished) return null;
+    //if (status != ExecutionStatus.finished) return null;
     return () {
       _showConfirmDialog(context);
     };
@@ -107,14 +109,19 @@ class StartTaskView extends StatelessWidget {
   void _showConfirmDialog(BuildContext context) {
     final idxMessage =
         RandomUtil.getRandomIntBetween(0, completionConfirmMessages.length - 1);
+
+    final title = completionConfirmMessages[idxMessage];
+    const message =
+        'Ten en cuenta que esta tarea es fundamental para tu recuperación. Si no estás seguro de haber completado la tarea, te recomendamos que la finalices más tarde. ¿Estás seguro de que deseas finalizar la tarea?';
+
+    tts.speak('$title. $message');
     showDialog<bool>(
       barrierDismissible: false,
       context: context,
       builder: (context) {
         return CustomConfirmDialog(
-          title: completionConfirmMessages[idxMessage],
-          content: const Text(
-              'Ten en cuenta que esta tarea es fundamental para tu recuperación. Si no estás seguro de haber completado la tarea, te recomendamos que la finalices más tarde. ¿Estás seguro de que deseas finalizar la tarea?'),
+          title: title,
+          content: const Text(message),
           onCancel: () => context.pop(false),
           onConfirm: () => context.pop(true),
           textConfirm: "Si, finalizar",
@@ -126,8 +133,8 @@ class StartTaskView extends StatelessWidget {
       if (value != null && value) {
         context.go('/home/treatments/0/assignments/$assignmentId/finish');
       } else {
-        // si no finaliza -> ir a la pantalla de la tarea
-        context.go('/home');
+        // pausar el audio
+        tts.stop();
       }
     });
   }
