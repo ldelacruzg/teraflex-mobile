@@ -43,6 +43,11 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       currentRepetition: 1,
       currentSeries: 1,
     ));
+    emit(state.copyWith(
+      executions: state.changeSerieAndRepetitionStatus(
+        status: TimerState.current,
+      ),
+    ));
     setNextStatus();
   }
 
@@ -87,7 +92,7 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       speak('Tiempo de descanso');
       emit(state.copyWith(
         status: ExecutionStatus.resting,
-        executions: state.changeStatusRepetition(
+        executions: state.changeSerieAndRepetitionStatus(
           status: TimerState.done,
         ),
       ));
@@ -111,8 +116,14 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
       emit(state.copyWith(
         currentSeries: newSerie,
         currentRepetition: 1,
-        executions:
-            state.changeSerieAndRepetitionStatus(status: TimerState.done),
+        executions: state.changeSerieAndRepetitionStatus(
+          status: TimerState.done,
+        ),
+      ));
+      emit(state.copyWith(
+        executions: state.changeSerieAndRepetitionStatus(
+          status: TimerState.current,
+        ),
       ));
       return setNextStatus();
     }
@@ -123,6 +134,9 @@ class TaskExecutionCubit extends Cubit<TaskExecutionState> {
     emit(state.copyWith(
       currentRepetition: newRepetition,
       executions: state.changeStatusRepetition(status: TimerState.done),
+    ));
+    emit(state.copyWith(
+      executions: state.changeStatusRepetition(status: TimerState.current),
     ));
 
     // verificar si es la última serie y repetición

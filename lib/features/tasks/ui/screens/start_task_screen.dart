@@ -295,12 +295,10 @@ class TimerSerie extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
-              color: currentSerie == (parentSerie + 1)
-                  ? Colors.blueAccent.shade100
-                  : colorStatus,
+              color: colorStatus,
             ),
             child: Text(
-              currentSerie == (parentSerie + 1) ? 'En Curso' : strStatus,
+              strStatus,
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
@@ -314,10 +312,7 @@ class TimerSerie extends StatelessWidget {
         for (var i = 0; i < repetitions.length; i++)
           TimerRepeat(
             title: 'Repetición ${i + 1}',
-            state: currentRepetition == (i + 1) &&
-                    currentSerie == (parentSerie + 1)
-                ? TimerState.current
-                : repetitions[i].status,
+            state: repetitions[i].status,
           ),
       ],
     );
