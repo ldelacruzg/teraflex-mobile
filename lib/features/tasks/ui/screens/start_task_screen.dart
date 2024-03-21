@@ -100,7 +100,7 @@ class StartTaskView extends StatelessWidget {
   });
 
   void Function()? finishTask(BuildContext context, ExecutionStatus status) {
-    //if (status != ExecutionStatus.finished) return null;
+    if (status != ExecutionStatus.finished) return null;
     return () {
       _showConfirmDialog(context);
     };
