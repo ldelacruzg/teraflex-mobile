@@ -277,7 +277,7 @@ class SpanRate extends StatelessWidget {
         children: [
           Icon(icon, color: Colors.black),
           Text(
-            '${accuracy * 100} %',
+            '${(accuracy * 100).toStringAsFixed(2)} %',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
